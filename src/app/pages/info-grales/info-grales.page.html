@@ -31,7 +31,7 @@
                     </ion-item> -->
                     <ion-item>
                         <ion-label position="stacked">Tipo cliente*:</ion-label>
-                        <ion-select formControlName="tipoCliente" okText="Ok">
+                        <ion-select placeholder="Seleccione" formControlName="tipoCliente" okText="Ok">
                             <ion-select-option value="FISICA">FISICA</ion-select-option>
                             <ion-select-option value="MORAL">MORAL</ion-select-option>
                         </ion-select>
@@ -95,7 +95,7 @@
                     </ion-item>
                     <ion-item>
                         <ion-label position="stacked">Nacionalidad*:</ion-label>
-                        <ion-select formControlName="nacionalidad" okText="Ok" cancelText="Cancelar">
+                        <ion-select placeholder="Seleccione" formControlName="nacionalidad" okText="Ok" cancelText="Cancelar">
                             <ion-select-option *ngFor="let tipo of catalogoNacionalidad" value="{{tipo.name_value}}">{{tipo.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
@@ -105,7 +105,7 @@
                     </ion-item>
                     <ion-item>
                         <ion-label position="stacked">Estado civil*:</ion-label>
-                        <ion-select formControlName="edoCivil" okText="Ok" cancelText="Cancelar">
+                        <ion-select placeholder="Seleccione" formControlName="edoCivil" okText="Ok" cancelText="Cancelar">
                             <ion-select-option *ngFor="let g of catalogoEdoCivil">{{g.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
@@ -122,13 +122,13 @@
                       </div>
                     <ion-item>
                         <ion-label position="stacked">Rango salarial (semanal):</ion-label>
-                        <ion-select formControlName="rangoSalarial" okText="Ok" cancelText="Cancelar">
+                        <ion-select placeholder="Seleccione" formControlName="rangoSalarial" okText="Ok" cancelText="Cancelar">
                             <ion-select-option *ngFor="let g of catalogoRangoSalar">{{g.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>
                         <ion-label position="stacked">Actividad empresarial:</ion-label>
-                        <ion-select formControlName="actividadEmpresarial" okText="Ok" cancelText="Cancelar">
+                        <ion-select placeholder="Seleccione" formControlName="actividadEmpresarial" okText="Ok" cancelText="Cancelar">
                             <ion-select-option *ngFor="let g of catalogoActEmpresa">{{g.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
@@ -180,32 +180,32 @@
                     
                     <ion-item>
                         <ion-label position="stacked">País:</ion-label>
-                        <ion-select *ngIf="catalogoPais" formControlName="pais" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('state',catalogoEstado,$event)">
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoPais" formControlName="pais" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('state',catalogoEstado,$event)">
                             <ion-select-option *ngFor="let g of catalogoPais" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>
                         <ion-label position="stacked">Tipo Domicilio:</ion-label>
-                        <ion-select formControlName="tipoDomic" okText="Ok" cancelText="Cancelar">
+                        <ion-select placeholder="Seleccione" formControlName="tipoDomic" okText="Ok" cancelText="Cancelar">
                             <ion-select-option *ngFor="let g of catalogoTipoDomic">{{g.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>
                         <ion-label position="stacked">Estado:</ion-label>
-                        <ion-select *ngIf="catalogoEstado" formControlName="estado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
-                            <ion-select-option *ngFor="let g of catalogoEstado" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoEstado" formControlName="estado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
+                            <ion-select-option *ngFor="let state of catalogoEstado" value="{{state.split('|')[1]}}">{{state.split('|')[0]}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item *ngIf="catalogoEstado">
                         <ion-label position="stacked">Ciudad:</ion-label>
-                        <ion-select *ngIf="catalogoCiudad" formControlName="ciudad" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('town',catalogoColonia,$event)">
-                            <ion-select-option *ngFor="let g of catalogoCiudad" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoCiudad" formControlName="ciudad" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('town',catalogoColonia,$event)">
+                            <ion-select-option *ngFor="let city of catalogoCiudad" value="{{city.split('|')[1]}}">{{city.split('|')[0]}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item *ngIf="catalogoCiudad">
                         <ion-label position="stacked">Colonia*:</ion-label>
-                        <ion-select *ngIf="catalogoColonia" formControlName="colonia" okText="Ok" cancelText="Cancelar">
-                            <ion-select-option *ngFor="let g of catalogoColonia" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoColonia" formControlName="colonia" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let col of catalogoColonia" value="{{col.split('|')[1]}}">{{col.split('|')[0]}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>
@@ -252,19 +252,19 @@
                     <ion-card>
                     <ion-item>
                         <ion-label position="stacked">País:</ion-label>
-                        <ion-select *ngIf="catalogoPais" [ngModel]="domi.getPais()" (ngModelChange)="domi.setPais($event)" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('state',catalogoEstado,$event)">
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoPais" [ngModel]="domi.getPais()" (ngModelChange)="domi.setPais($event)" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('state',catalogoEstado,$event)">
                             <ion-select-option *ngFor="let g of catalogoPais" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>
                             <ion-label position="stacked">Estado:</ion-label>
-                            <ion-select *ngIf="catalogoEstado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
+                            <ion-select placeholder="Seleccione" *ngIf="catalogoEstado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
                                 <ion-select-option *ngFor="let g of catalogoEstado" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
                             </ion-select>
                         </ion-item>
                         <ion-item *ngIf="catalogoEstado">
                             <ion-label position="stacked">Ciudad:</ion-label>
-                            <ion-select *ngIf="catalogoCiudad" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('town',catalogoColonia,$event)">
+                            <ion-select placeholder="Seleccione" *ngIf="catalogoCiudad" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('town',catalogoColonia,$event)">
                                 <ion-select-option [ngModel]="domi.getCiudad()" (ngModelChange)="domi.setCiudad($event)" *ngFor="let g of catalogoCiudad" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
                             </ion-select>
                         </ion-item>

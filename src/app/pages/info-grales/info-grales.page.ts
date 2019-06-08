@@ -40,9 +40,9 @@ export class InfoGralesPage implements OnInit {
   catalogoActEmpresa: CatalogoValuesOut[]=[];
   catalogoPais: CatalogoValuesOut[]=[];
   catalogoTipoDomic: CatalogoValuesOut[]=[];
-  catalogoEstado: CatalogoValuesOut[]=[];
-  catalogoCiudad: CatalogoValuesOut[]=[];
-  catalogoColonia: CatalogoValuesOut[]=[];
+  catalogoEstado: string[]=[];
+  catalogoCiudad: string[]=[];
+  catalogoColonia: string[]=[];
   regex: Regex = new Regex();
   catalogosCargados: number = 0;
   bearer: string;
@@ -174,23 +174,23 @@ export class InfoGralesPage implements OnInit {
       if(!this.cliente)
         this.cliente = new Cliente();
 
-    this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2('state', this.bearer, '160').subscribe(
-      (respuesta: any) =>{
-        console.log(respuesta);
-        if(respuesta.code == -9999)
-        {
-          respuesta.data.forEach(elemento => {
-          let elementoCat = new CatalogoValuesOut(elemento[0],elemento[1],"","",0);
-          this.catalogoEstado.push(elementoCat);
+        this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2('state', this.bearer, '160').subscribe(
+          (respuesta: any) =>{
+            if(respuesta.code == -9999)
+            {
+              respuesta.data.forEach(elemento => {
+              // let elementoCat = new CatalogoValuesOut(0,elemento[1],"","",elemento[0]);
+              this.catalogoEstado.push(elemento[1]+'|'+elemento[0]);
+              });
+              this.catalogoEstado.sort();
+              this.catalogosCargados += 1;
+            }
+            else
+              this.catalogoEstado = [];
+          },
+          (err: HttpErrorResponse)=>{
+            console.log(err)
           });
-          this.catalogosCargados += 1;
-        }
-        else
-          this.catalogoEstado = [];
-      },
-      (err: HttpErrorResponse)=>{
-        console.log(err)
-      });
     
     this.infoClienteForm = this.formBuilder.group({
 
@@ -244,27 +244,22 @@ export class InfoGralesPage implements OnInit {
     });
   }
 
-  onChangeSelect(nombre: string, catalogo: CatalogoValuesOut[], $event)
-  {
-    let opcionID = $event.detail.value;
-    if(nombre === 'state' && this.otroPais !== 0){
-      this.otroPais += 1;
-      opcionID = 160;
-    }
-    else
-    opcionID = $event.detail.value;
+  onChangeSelect(nombre: string, catalogo: string[], $event) {
 
-    if(opcionID)
+    if($event.detail.value)
     {
       this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2(nombre, this.bearer, $event.detail.value).subscribe(
         (respuesta: any) =>{
+          console.log(nombre, $event.detail.value);
           console.log(respuesta);
+          catalogo = [];
           if(respuesta.code == -9999)
           {
             respuesta.data.forEach(elemento => {
-            let elementoCat = new CatalogoValuesOut(elemento[0],elemento[1],"","",0);
-            catalogo.push(elementoCat);
+            // let elementoCat = new CatalogoValuesOut(0,elemento[1],"","",elemento[0]);
+            catalogo.push(elemento[1]+'|'+elemento[0]);
             });
+            catalogo.sort();
             this.catalogosCargados += 1;
           }
           else
@@ -275,6 +270,39 @@ export class InfoGralesPage implements OnInit {
         });
     }
   }
+
+  // onChangeSelect(nombre: string, catalogo: CatalogoValuesOut[], $event)
+  // {
+  //   let opcionID = $event.detail.value;
+  //   if(nombre === 'state' && this.otroPais !== 0){
+  //     this.otroPais += 1;
+  //     opcionID = 160;
+  //   }
+  //   else
+  //   opcionID = $event.detail.value;
+
+  //   if(opcionID)
+  //   {
+  //     this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2(nombre, this.bearer, $event.detail.value).subscribe(
+  //       (respuesta: any) =>{
+  //         console.log(respuesta);
+  //         if(respuesta.code == -9999)
+  //         {
+  //           respuesta.data.forEach(elemento => {
+  //           let elementoCat = new CatalogoValuesOut(elemento[0],elemento[1],"","",0);
+  //           catalogo.push(elementoCat);
+  //           catalogo
+  //           });
+  //           this.catalogosCargados += 1;
+  //         }
+  //         else
+  //           catalogo = [];
+  //       },
+  //       (err: HttpErrorResponse)=>{
+  //         console.log(err)
+  //       });
+  //   }
+  // }
 
   moreTel() {
     const newTelefono = new TelefonosDto();
