@@ -1,0 +1,33 @@
+.item_specifying{
+    display: contents;
+    --border-color: #FDB813;
+    --border-top: #FDB813;
+}
+
+.imagenes{
+    img{
+    border: dotted;
+    border-color: #018A5E;
+    max-width: 50%;
+    }
+}
+
+.imgFotos{
+    img{
+        max-width: 50%;
+    }
+}
+
+.item_ingreso{
+    display: contents;
+    --border-color: #3498DB;
+}
+
+.btn_capturar{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.btn_final{
+    --background: #FDB813;
+}

@@ -1,0 +1,29 @@
+
+.header_logo{
+  border-bottom: 2px solid #018A5E;
+  border-top: 2px solid #018a5e;
+  border-right: 2px solid #018A5E;
+  border-left: 2px solid #018A5E;
+}
+  .datos_input {
+    background-color: #fff;
+    border-radius: 500px;
+    margin: 0 0 25px 0;
+  }
+  .boton_style{
+    --border-radius: 500px !important;
+    --background: #fff !important;
+    --color: #00A850 !important;
+  }
+
+  .icono_sig{
+      font-size: 20px;
+  }
+
+  .sc-ion-card-md-h{
+    --background: #FDB813;
+    padding-top: 25px;
+    padding-bottom: 0px;
+    margin-top: 35%;
+  }
+  

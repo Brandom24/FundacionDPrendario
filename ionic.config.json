@@ -1,0 +1,8 @@
+{
+  "name": "FundacionDonde",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "id": "d789bccd"
+}

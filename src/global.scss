@@ -1,0 +1,93 @@
+// http://ionicframework.com/docs/theming/
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+@import '~@ionic/angular/css/display.css';
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+
+.animated.infinite {
+-webkit-animation-iteration-count: infinite;
+animation-iteration-count: infinite;
+}
+
+.animated.delay-1s {
+-webkit-animation-delay: 1s;
+animation-delay: 1s;
+}
+
+.animated.slow {
+-webkit-animation-duration: 2s;
+animation-duration: 2s;
+}
+
+@-webkit-keyframes flash {
+    from,
+    50%,
+    to {
+      opacity: 1;
+    }
+  
+    25%,
+    75% {
+      opacity: 0;
+    }
+  }
+  
+  @keyframes flash {
+    from,
+    50%,
+    to {
+      opacity: 1;
+    }
+  
+    25%,
+    75% {
+      opacity: 0.5;
+    }
+  }
+  
+  .flash {
+    -webkit-animation-name: flash;
+    animation-name: flash;
+  }
+
+  .style_logo_header{
+    height: 45px;
+  }
+
+  .style_sub_header{
+    border-bottom: 1px solid #2233446e;
+  }
+
+  .header-md:after{
+    background-image: none;
+    -webkit-box-shadow: 0px 4px 30px -2px #ffd200;
+    -moz-box-shadow: 0px 4px 30px -2px #ffd200;
+    box-shadow: 0px 4px 5px -2px #ffd200;
+    bottom: 0px;
+  }
+
+  .header-ios:after{
+    background-image: none;
+    -webkit-box-shadow: 0px 4px 30px -2px #ffd200;
+    -moz-box-shadow: 0px 4px 30px -2px #ffd200;
+    box-shadow: 0px 4px 5px -2px #ffd200;
+    bottom: 0px;
+  }
+
+  ion-toolbar ion-menu-button{
+    --color: #008000 !important;
+  }
+
+  .style_button{
+    font-size: 12px;
+  }
+
+  .style_salir {
+    text-align: center;
+  }

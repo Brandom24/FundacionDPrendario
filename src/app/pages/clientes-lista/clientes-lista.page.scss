@@ -1,0 +1,16 @@
+.btn_ver{
+    --border-color: #FFD200;
+    color: #FFD200;
+}
+
+.btn_proceso{
+    --border-color: #018A5E;
+    color: #018A5E;
+}
+
+.item_lista {
+    display: contents;
+    --border-bottom: var(--border-style);
+    --border-color: #8EC63F;
+    --margin-top: -30%;
+}

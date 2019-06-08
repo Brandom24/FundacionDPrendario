@@ -1,0 +1,86 @@
+<ion-content padding>
+      
+  <ion-item class="item_result">
+    <ion-label>
+      <h2>Nombre</h2>
+      <p>{{user.first_name ? user.first_name: ''}} {{user.last_name ? user.last_name: ''}}</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item class="item_result">
+      <ion-label>
+        <h2>Código Postal</h2>
+        <p>{{ user.zip_code ? user.zip_code: '' }}</p>
+      </ion-label>
+    </ion-item>
+
+  <ion-item class="item_result">
+      <ion-label>
+        <h2>Calle</h2>
+        <p>{{ user.street ? user.street: '' }}</p>
+      </ion-label>
+    </ion-item>
+
+  <ion-grid>
+      <ion-row>
+        <ion-col>
+            <ion-item class="item_result">
+                <ion-label>
+                  <h2>Numero Ext.</h2>
+                  <p>{{user.ext_number ? user.ext_number: '' }}</p>
+                </ion-label>
+              </ion-item>
+        </ion-col>
+        <ion-col>
+            <ion-item class="item_result">
+                <ion-label>
+                  <h2>Numero Int.</h2>
+                  <p>{{user.int_number ? user.int_number: ''}}</p>
+                </ion-label>
+              </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+<ion-item class="item_result">
+<ion-label>
+<h2>Colonia</h2>
+<p>{{ user.colony ? user.colony: '' }}</p>
+</ion-label>
+</ion-item>
+
+<ion-item class="item_result">
+<ion-label>
+<h2>Delegación / Municipio</h2>
+<p>{{ user.colony ? user.colony: '' }}</p>
+</ion-label>
+</ion-item>
+
+<ion-item class="item_result">
+<ion-label>
+<h2>Ciudad</h2>
+<p>{{ user.colony ? user.colony: '' }}</p>
+</ion-label>
+</ion-item>
+
+<ion-item class="item_result">
+<ion-label>
+<h2>Estado</h2>
+<p>{{ user.state ? user.state: '' }}</p>
+</ion-label>
+</ion-item>
+
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-button class="btn_line" expand="block" fill="outline" (click)="listaC()">Regresar</ion-button>
+    </ion-col>
+    <ion-col>
+      <ion-button class="btn_block" expand="block" (click)="toVisit()">Visitar</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+{user | json}
+      
+</ion-content>

@@ -1,0 +1,97 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div>
+        <br>
+        <ion-row justify-content-center align-items-center>
+            <ion-col justify-content-center align-items-center>
+                <div class="" text-center>Consulta Buró de crédito</div>
+            </ion-col>
+            <ion-item-divider></ion-item-divider>
+        </ion-row>
+    </div>
+
+    <ion-grid fixed>
+        <ion-row>
+            <ion-col size="12">
+                <h3>Intrucciones</h3>
+            </ion-col>
+        </ion-row>
+        <ion-row justify-content-center align-items-center>
+
+            <ion-col size="12">
+                <p>1.) Abrir URL, consultar INE y realizar una captura de pantalla</p>
+            </ion-col>
+            <ion-col size="4" align-self-center></ion-col>
+            <ion-col size="8" align-self-center>
+                <span>Abrir Pagina web INE</span>
+                <ion-button class="color_button" expand="block" (click)="openB()">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    Abrir burodecredito.com.mx/
+                </ion-button>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="12">
+                <p>2.) Explorar y subir captura de pantalla</p>
+            </ion-col>
+            <ion-col size="4" align-self-center>
+                <div>
+                    <ion-card-content class="imagenes" *ngIf="!frontImg" color="darck">
+                        <img src="../../../../assets/img/agre_img.png">
+                    </ion-card-content>
+                </div>
+                <div>
+                    <ion-card-content class="imgFotos" *ngIf="frontImg">
+                        <img [src]="frontImg">
+                    </ion-card-content>
+                </div>
+                <div class="custom-file">
+                    <input #img_file type="file" class="custom-file-input" id="customFile" (change)="changeListenerINE($event)" accept="image/jpeg,image/png">
+                    <label class="custom-file-label" for="customFile"></label>
+                </div>
+            </ion-col>
+            <ion-col size="8" align-self-center>
+                <span>Subir Captura de pantalla</span>
+                <ion-button class="ion-margin-top" expand="block" fill="outline" (click)="openGallery()" *ngIf="!frontImg">
+                    <!-- <ion-spinner *ngIf="isValidoSpinnerFront" name="bubbles"></ion-spinner>  -->
+                    <ion-ripple-effect></ion-ripple-effect>
+                    Captura de pantalla
+                </ion-button>
+                <ion-button class="color_button" expand="block" (click)="openGallery()" *ngIf="frontImg">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    Completado
+                </ion-button>
+
+                <ion-button class="ion-margin-top" expand="block" fill="outline" (click)="getImagenFront()" *ngIf="!frontImg">
+                    <!-- <ion-spinner *ngIf="isValidoSpinnerFront" name="bubbles"></ion-spinner>  -->
+                    <ion-ripple-effect></ion-ripple-effect>
+                    Tomar Foto
+                </ion-button>
+                <ion-button class="color_button" expand="block" (click)="getImagenFront()" *ngIf="frontImg">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    Completado
+                </ion-button>
+
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-button color="primary" class="" expand="block" [disabled]="!frontImg" (click)="goCargarDocumento()">
+            <ion-ripple-effect></ion-ripple-effect>
+            CONTINUAR
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,58 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-label>¿Autorizas consulta a buró de crédito?</ion-label>
+    <ion-grid>
+        <ion-radio-group [(ngModel)]="esConsultar">
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-label>Sí</ion-label>
+                        <ion-radio [value]="true"></ion-radio>
+                    </ion-item>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-label>No</ion-label>
+                        <ion-radio [value]="false"></ion-radio>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-radio-group>
+        <ion-row *ngIf="esConsultar">
+            <ion-col class="style_pad">
+                <signature-pad [options]="signaturePadOptions" (onEndEvent)="drawComplete()"></signature-pad>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngIf="esConsultar">
+            <ion-col>
+                <ion-button color="primary" expand="block" (click)="repetir()">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    REPETIR
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <!--  [disabled]="!isenabled || !isenabled2"  -->
+        <ion-button *ngIf="esConsultar" color="primary" class="" expand="block" (click)="enviar()">
+            <ion-ripple-effect></ion-ripple-effect>
+            CONTINUAR
+        </ion-button>
+        <ion-button *ngIf="!esConsultar" color="primary" expand="block" (click)="finalizar()">
+            <ion-ripple-effect></ion-ripple-effect>
+            FINALIZAR
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

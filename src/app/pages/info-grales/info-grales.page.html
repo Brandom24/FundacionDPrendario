@@ -1,0 +1,302 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div>
+        <br>
+        <ion-row justify-content-center align-items-center>
+            <ion-col justify-content-center align-items-center>
+                <div class="" text-center>Ingreso clientes</div>
+            </ion-col>
+            <ion-item-divider></ion-item-divider>
+        </ion-row>
+    </div>
+    <ion-grid fixed>
+        <ion-row justify-content-center align-items-center>
+            <ion-col size="10" align-self-center>
+                <form [formGroup]="infoClienteForm">
+                    <!-- <ion-item>
+                        <ion-label position="stacked">Tipo cliente*:</ion-label>
+                        <ion-select formControlName="tipoCliente" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let tipo of catalogoTipoCliente" value="{{tipo.id_catalogue}}">{{tipo.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item> -->
+                    <ion-item>
+                        <ion-label position="stacked">Tipo cliente*:</ion-label>
+                        <ion-select formControlName="tipoCliente" okText="Ok">
+                            <ion-select-option value="FISICA">FISICA</ion-select-option>
+                            <ion-select-option value="MORAL">MORAL</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Nro. Identif.*: </ion-label>
+                        <ion-input style="text-transform:uppercase" formControlName="numId" maxlength="20"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.numId">
+                          <div class="error-message" *ngIf="infoClienteForm.get('numId').hasError(validation.type)">
+                            <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    <ion-item>
+                        <ion-label position="stacked">Autoridad que emite Iden.: </ion-label>
+                        <ion-input style="text-transform:uppercase" formControlName="autoridadEmiteId" maxlength="30"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.autoridadEmiteId">
+                          <div class="error-message" *ngIf="infoClienteForm.get('autoridadEmiteId').hasError(validation.type)">
+                            <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    <ion-item>
+                        <ion-label position="stacked">I.F.E.</ion-label>
+                        <ion-input readonly="true" style="text-transform:uppercase" formControlName="ife" maxlength="18"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.ife">
+                          <div class="error-message" *ngIf="infoClienteForm.get('ife').hasError(validation.type)">
+                            <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    <ion-item>
+                        <ion-label position="stacked">C.U.R.P.</ion-label>
+                        <ion-input readonly="true" formControlName="curp" maxlength="18"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">R.F.C.</ion-label>
+                        <ion-input readonly="true" formControlName="rfc" maxlength="13"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Apellido paterno*: </ion-label>
+                        <ion-input readonly="true" formControlName="paterno"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Apellido materno*: </ion-label>
+                        <ion-input readonly="true" formControlName="materno"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Nombre*: </ion-label>
+                        <ion-input readonly="true" formControlName="nombre"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Fecha de nacimiento*:</ion-label>
+                        <ion-datetime readonly="true" display-format="DD MMMM YYYY" formControlName="nacimiento"></ion-datetime>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Nacionalidad*:</ion-label>
+                        <ion-select formControlName="nacionalidad" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let tipo of catalogoNacionalidad" value="{{tipo.name_value}}">{{tipo.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Sexo*:</ion-label>
+                        <ion-input readonly="true" formControlName="sexo"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Estado civil*:</ion-label>
+                        <ion-select formControlName="edoCivil" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let g of catalogoEdoCivil">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Actividad*: </ion-label>
+                        <ion-input style="text-transform:uppercase" formControlName="actividad"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.actividad">
+                          <div class="error-message" *ngIf="infoClienteForm.get('actividad').hasError(validation.type)">
+                            <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    <ion-item>
+                        <ion-label position="stacked">Rango salarial (semanal):</ion-label>
+                        <ion-select formControlName="rangoSalarial" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let g of catalogoRangoSalar">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Actividad empresarial:</ion-label>
+                        <ion-select formControlName="actividadEmpresarial" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let g of catalogoActEmpresa">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <!-- <ion-item>
+                        <ion-label position="stacked">Asociar teléfonos:</ion-label>
+                    </ion-item> -->
+                    <ion-item color="light">
+                        <ion-label>
+                            Asociar teléfonos
+                        </ion-label>
+                        <ion-icon name="add-circle" slot="end" color="success" (click)="moreTel()"></ion-icon>
+                        <ion-icon name="remove-circle-outline" slot="end" color="danger" (click)="lessTel()"></ion-icon>
+                    </ion-item>
+
+                    <ion-list *ngFor="let tel of listaTelefonos">
+                        <ion-item>
+                          <ion-input [ngModelOptions]="{standalone: true}" type="tel" maxlength="10" [ngModel]="tel.getNumTel()" (ngModelChange)="tel.setNumTel($event)" placeholder="Telefono"></ion-input>
+                        </ion-item>
+                    </ion-list>
+
+                    <ion-item color="light">
+                        <ion-label>
+                            Asociar email
+                        </ion-label>
+                        <ion-icon name="add-circle" slot="end" color="success" (click)="moreEmail()"></ion-icon>
+                        <ion-icon name="remove-circle-outline" slot="end" color="danger" (click)="lessEmail()"></ion-icon>
+                    </ion-item>
+        
+                    <ion-list *ngFor="let email of listaEmail">
+                        <ion-item>
+                            <ion-input [ngModelOptions]="{standalone: true}" type="email" [ngModel]="email.getEmail()" (ngModelChange)="email.setEmail($event)" placeholder="Correo"></ion-input>
+                        </ion-item>
+                    </ion-list>
+                    <!-- <ion-item>
+                        <ion-label position="stacked">Asociar direcciones de email:</ion-label>
+                    </ion-item> -->
+                    
+                    <ion-item>
+                        <ion-label position="stacked">Facebook: </ion-label>
+                        <ion-input formControlName="facebook" maxlength="40"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Recibir notificación de vencimientos:</ion-label>
+                        <ion-checkbox formControlName="esNotifVencim"></ion-checkbox>
+                    </ion-item>
+                    <!-- <ion-item>
+                        <ion-label>Domicilio:</ion-label>
+                    </ion-item> -->
+                    
+                    <ion-item>
+                        <ion-label position="stacked">País:</ion-label>
+                        <ion-select *ngIf="catalogoPais" formControlName="pais" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('state',catalogoEstado,$event)">
+                            <ion-select-option *ngFor="let g of catalogoPais" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Tipo Domicilio:</ion-label>
+                        <ion-select formControlName="tipoDomic" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let g of catalogoTipoDomic">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Estado:</ion-label>
+                        <ion-select *ngIf="catalogoEstado" formControlName="estado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
+                            <ion-select-option *ngFor="let g of catalogoEstado" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item *ngIf="catalogoEstado">
+                        <ion-label position="stacked">Ciudad:</ion-label>
+                        <ion-select *ngIf="catalogoCiudad" formControlName="ciudad" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('town',catalogoColonia,$event)">
+                            <ion-select-option *ngFor="let g of catalogoCiudad" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item *ngIf="catalogoCiudad">
+                        <ion-label position="stacked">Colonia*:</ion-label>
+                        <ion-select *ngIf="catalogoColonia" formControlName="colonia" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let g of catalogoColonia" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Calle*: </ion-label>
+                        <ion-input style="text-transform:uppercase" formControlName="calle" maxlength="40"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.calle">
+                          <div class="error-message" *ngIf="infoClienteForm.get('calle').hasError(validation.type)">
+                            <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    <ion-item>
+                        <ion-label position="stacked">Número*: </ion-label>
+                        <ion-input style="text-transform:uppercase" formControlName="numero" maxlength="15"></ion-input>
+                    </ion-item>
+                    <div class="validation-errors">
+                        <ng-container *ngFor="let validation of validation_messages.numero">
+                          <div class="error-message" *ngIf="infoClienteForm.get('numero').hasError(validation.type)">
+                            <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                          </div>
+                        </ng-container>
+                      </div>
+                    <ion-item>
+                        <ion-label>Bis:</ion-label>
+                        <ion-checkbox formControlName="esBis"></ion-checkbox>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Número interior: </ion-label>
+                        <ion-input style="text-transform:uppercase" formControlName="numInt" maxlength="15"></ion-input>
+                    </ion-item>
+                </form>
+                
+                <!-- Domicilio dinamico -->
+                <ion-item color="light">
+                    <ion-label>
+                        Domicilio
+                    </ion-label>
+                    <ion-icon name="add-circle" slot="end" color="success" (click)="moreDomi()"></ion-icon>
+                    <ion-icon name="remove-circle-outline" slot="end" color="danger" (click)="lessDomi()"></ion-icon>
+                </ion-item>
+                <ion-list *ngFor="let domi of listaDomicilio">
+                    <ion-card>
+                    <ion-item>
+                        <ion-label position="stacked">País:</ion-label>
+                        <ion-select *ngIf="catalogoPais" [ngModel]="domi.getPais()" (ngModelChange)="domi.setPais($event)" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('state',catalogoEstado,$event)">
+                            <ion-select-option *ngFor="let g of catalogoPais" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item>
+                            <ion-label position="stacked">Estado:</ion-label>
+                            <ion-select *ngIf="catalogoEstado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
+                                <ion-select-option *ngFor="let g of catalogoEstado" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-item *ngIf="catalogoEstado">
+                            <ion-label position="stacked">Ciudad:</ion-label>
+                            <ion-select *ngIf="catalogoCiudad" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('town',catalogoColonia,$event)">
+                                <ion-select-option [ngModel]="domi.getCiudad()" (ngModelChange)="domi.setCiudad($event)" *ngFor="let g of catalogoCiudad" value="{{g.id_catalogue}}">{{g.name}}</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Calle*: </ion-label>
+                        <ion-input style="text-transform:uppercase" [ngModel]="domi.getCalle()" (ngModelChange)="domi.setCalle($event)" maxlength="40"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Número*: </ion-label>
+                        <ion-input style="text-transform:uppercase" [ngModel]="domi.getNumero()" (ngModelChange)="domi.setNumero($event)" maxlength="15"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Bis:</ion-label>
+                        <ion-checkbox [ngModel]="domi.isBis()" (ngModelChange)="domi.setBis($event)"></ion-checkbox>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Número interior: </ion-label>
+                        <ion-input style="text-transform:uppercase" [ngModel]="domi.getNumInter()" (ngModelChange)="domi.setNumInter($event)" maxlength="15"></ion-input>
+                    </ion-item>
+                </ion-card>
+                </ion-list>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <!-- [disabled]="infoClienteForm && infoClienteForm.invalid" -->
+        <ion-button [disabled]="infoClienteForm && infoClienteForm.invalid" color="primary" expand="block" (click)="enviar()">
+            <ion-ripple-effect></ion-ripple-effect>
+            CONTINUAR
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

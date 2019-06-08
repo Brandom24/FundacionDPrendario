@@ -1,0 +1,108 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+        <!-- <ion-title>Captura domicilio confirmacion</ion-title> -->
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="fag">
+        <div>
+            <br>
+            <ion-row justify-content-center align-items-center>
+                <ion-col justify-content-center align-items-center>
+                    <div class="" text-center>Verificación de datos extraídos</div>
+                </ion-col>
+                <ion-item-divider></ion-item-divider>
+            </ion-row>
+        </div>
+        <ion-grid fixed>
+            <ion-row>
+                <ion-col size="12">
+                    <br>
+                    <br>
+                    <ion-item>
+                        <ion-label>Nombre: </ion-label>
+                        <ion-input type='text' [(ngModel)]="analisis.nombre"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Codigo Postal: </ion-label>
+                        <ion-input type='text' [(ngModel)]="cp"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label>Calle: </ion-label>
+                        <ion-input type='text' [(ngModel)]="analisis.calle"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="12">
+
+                </ion-col>
+                <ion-col size="12">
+                    <ion-item>
+                        <ion-label>Colonia: </ion-label>
+                        <ion-input type='text' [(ngModel)]="analisis.colonia"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <!-- <ion-col size="12">
+                    <ion-item>
+                        <ion-label>Delegacion / Municipio: </ion-label>
+                        <ion-input type='text' [(ngModel)]="analisis.colonia"></ion-input>
+                    </ion-item>
+                </ion-col> -->
+                <ion-col size="12">
+                    <ion-item>
+                        <ion-label>Ciudad: </ion-label>
+                        <ion-input type='text' [(ngModel)]="analisis.ciudad"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <!-- <ion-col size="12">
+                    <ion-item>
+                        <ion-label>Estado: </ion-label>
+                        <ion-input type='text' [(ngModel)]="analisis.ciudad"></ion-input>
+                    </ion-item>
+                </ion-col> -->
+            </ion-row>
+        </ion-grid>
+        <div>
+            <!-- class="style_img" -->
+            <img  [src]="imgenDomicilio">
+        </div>
+                
+    </div>
+    <div *ngIf="!fag">
+        <ion-progress-bar type="indeterminate"></ion-progress-bar>
+        <h1 class="ion-text-center">Obteniendo tus datos</h1>
+        <ion-list *ngIf="!fag">
+            <ion-item *ngFor="let item of [1,1,1,1,1,1,1,1,1,1]" class="animated flash slow infinite">
+                <ion-label>
+                    <h3>
+                        <ion-skeleton-text width="30%"></ion-skeleton-text>
+                    </h3>
+                    <h3>
+                        <ion-skeleton-text width="100%"></ion-skeleton-text>
+                    </h3>
+                    <p>
+                        <ion-skeleton-text width="100%"></ion-skeleton-text>
+                    </p>
+                </ion-label>
+                <ion-label slot="end" text-right>
+                    <ion-skeleton-text width="50%"></ion-skeleton-text>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <!--  [disabled]="!isenabled || !isenabled2"   -->
+        <ion-button color="primary" expand="block" (click)="goFirmaContrato()">
+            <ion-ripple-effect></ion-ripple-effect>
+            CONTINUAR
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

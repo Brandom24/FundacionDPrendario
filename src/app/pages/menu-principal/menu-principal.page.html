@@ -1,0 +1,51 @@
+<ion-header>
+    <ion-toolbar>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div>
+        <br>
+        <ion-row class="style_sub_header" justify-content-center align-items-center>
+            <ion-col justify-content-center align-items-center>
+                <div class="" text-center>Menú Principal</div>
+            </ion-col>
+            <ion-item-divider></ion-item-divider>
+        </ion-row>
+    </div>
+
+
+    <ion-grid fixed>
+        <ion-row justify-content-center align-items-center>
+            <ion-col size="5">
+                <ion-img src="../../../assets/img/varios.png"></ion-img>
+            </ion-col>
+            <ion-col size="5">
+                <p>Alhajas, Electrónicos y Varios
+                </p>
+            </ion-col>
+            <ion-button expand="block" (click)="iniciarFlujo('alhajas')">
+                Iniciar
+            </ion-button>
+        </ion-row>
+        <ion-item-divider>
+        </ion-item-divider>
+        <ion-row justify-content-center align-items-center>
+            <ion-col size="5">
+                <ion-img src="../../../assets/img/autos.png"></ion-img>
+            </ion-col>
+            <ion-col size="5">
+                <p>Autos y motos
+                </p>
+            </ion-col>
+            <ion-button expand="block" (click)="iniciarFlujo('autos')">
+                Iniciar
+            </ion-button>
+        </ion-row>
+    </ion-grid>
+
+
+</ion-content>

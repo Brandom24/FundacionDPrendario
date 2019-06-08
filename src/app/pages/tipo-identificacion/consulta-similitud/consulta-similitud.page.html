@@ -1,0 +1,72 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+          </div>  
+        <!-- <ion-title>Consulta similitud</ion-title> -->
+      </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div>
+        <br>
+          <ion-row justify-content-center align-items-center>
+              <ion-col justify-content-center align-items-center>
+                <div class="" text-center>Digitalización de identificacion Oficial</div>
+              </ion-col>
+            <ion-item-divider></ion-item-divider>
+          </ion-row>
+      </div> 
+<ion-grid fixed>
+  <ion-row justify-content-center align-items-center>
+    <ion-col size="8" align-self-center>
+      <!-- <div>
+        <ion-card-content class="imagenes" color="darck">
+            <img src="../../../../assets/img/agre_img.png">
+        </ion-card-content>
+      </div>  *ngIf="capturasF"-->
+      <div>
+          <ion-card-content class="imgFotos">
+              <img [src]="capturasF">
+          </ion-card-content>
+      </div>
+    </ion-col> 
+  </ion-row>
+  <ion-row justify-content-center align-items-center>
+    <ion-col size="8" align-self-center>
+      <!-- <div>
+          <ion-card-content class="imagenes">
+              <img src="../../../../assets/img/agre_img.png">
+          </ion-card-content>
+      </div>  *ngIf="capturasB"-->
+      
+      <div>
+        <ion-card-content class="imgFotos">
+            <img [src]="capturasB">
+        </ion-card-content>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row justify-content-center align-items-center>
+      <ion-col size="8" align-self-center>
+        <div>
+            <ion-card-content class="style_img_icon">
+                <img src="../../../../assets/img/huella.png">
+            </ion-card-content>
+        </div>
+      </ion-col>
+    </ion-row>
+</ion-grid>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <!--  [disabled]="!isenabled || !isenabled2"  -->
+      <ion-button color="primary" class="" expand="block" (click)="onConsultaSimilitudConfirmar()" >
+          <ion-ripple-effect></ion-ripple-effect>
+          CONTINUAR
+        </ion-button>
+  </ion-toolbar>
+</ion-footer> 

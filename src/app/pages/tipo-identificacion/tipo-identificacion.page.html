@@ -1,0 +1,41 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+        <!-- <ion-title>tipo-identificacion</ion-title> -->
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div>
+        <br>
+        <ion-row justify-content-center align-items-center>
+            <ion-col justify-content-center align-items-center>
+                <div class="" text-center>Selección Documento a Digitalizar</div>
+            </ion-col>
+            <ion-item-divider></ion-item-divider>
+        </ion-row>
+    </div>
+    <ion-grid fixed>
+        <ion-row justify-content-center align-items-center>
+            <ion-col size="8">
+                <ion-button class="style_button" expand="block" (click)="onIdentificacionOficial()">
+                    Credencial de elector
+                </ion-button>
+            </ion-col>
+        </ion-row>
+        <br>
+        <br>
+        <ion-row justify-content-center align-items-center>
+            <ion-col size="8">
+                <ion-button class="style_button" expand="block" (click)="onIdentificacionPasaporte()">
+                    Soy extranjero
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

@@ -1,0 +1,198 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+        <!-- <ion-title>Consulta similitud Confirmacion</ion-title> -->
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <div *ngIf="fag">
+        <div>
+            <br>
+            <ion-row justify-content-center align-items-center>
+                <ion-col justify-content-center align-items-center>
+                    <div class="" text-center>Verificación de datos extraídos</div>
+                </ion-col>
+                <ion-item-divider></ion-item-divider>
+            </ion-row>
+        </div>
+        <ion-grid fixed>
+            <ion-row justify-content-center align-items-center>
+                <ion-col size="10" align-self-center>
+                    <form *ngIf="infoClienteForm" [formGroup]="infoClienteForm">
+                        <ion-item>
+                            <ion-label position="stacked">Nombre*: </ion-label>
+                            <ion-input maxlength="30" style="text-transform:uppercase" formControlName="nombre"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.nombre">
+                              <div class="error-message" *ngIf="infoClienteForm.get('nombre').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Apellido paterno*: </ion-label>
+                            <ion-input maxlength="30" style="text-transform:uppercase" formControlName="paterno"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.paterno">
+                              <div class="error-message" *ngIf="infoClienteForm.get('paterno').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Apellido materno*: </ion-label>
+                            <ion-input maxlength="30" style="text-transform:uppercase" formControlName="materno"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.materno">
+                              <div class="error-message" *ngIf="infoClienteForm.get('materno').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Sexo*:</ion-label>
+                            <ion-select formControlName="sexo" okText="Ok" cancelText="Cancelar">
+                                <ion-select-option value="MASCULINO">MASCULINO</ion-select-option>
+                                <ion-select-option value="FEMENINO">FEMENINO</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="stacked">Fecha de nacimiento*:</ion-label>
+                            <ion-datetime display-format="DD MMMM YYYY" formControlName="nacimiento"></ion-datetime>
+                        </ion-item>
+                        <ion-item>
+                            <ion-label position="stacked">CURP: </ion-label>
+                            <ion-input maxlength="18" style="text-transform:uppercase" formControlName="curp"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.curp">
+                              <div class="error-message" *ngIf="infoClienteForm.get('curp').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">RFC*: </ion-label>
+                            <ion-input maxlength="13" style="text-transform:uppercase" formControlName="rfc"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.rfc">
+                              <div class="error-message" *ngIf="infoClienteForm.get('rfc').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Año de registro:</ion-label>
+                            <ion-input maxlength="4" style="text-transform:uppercase" formControlName="anioRegistro"></ion-input>
+                            <!-- <ion-datetime display-format="YYYY" formControlName="anioRegistro"></ion-datetime> -->
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.anioRegistro">
+                              <div class="error-message" *ngIf="infoClienteForm.get('anioRegistro').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Emisión:</ion-label>
+                            <ion-input style="text-transform:uppercase" formControlName="emision" type="number"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.emision">
+                              <div class="error-message" *ngIf="infoClienteForm.get('emision').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Clave de elector: </ion-label>
+                            <ion-input maxlength="18" style="text-transform:uppercase" formControlName="claveElector"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.claveElector">
+                              <div class="error-message" *ngIf="infoClienteForm.get('claveElector').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Vigencia*: </ion-label>
+                            <ion-input style="text-transform:uppercase" formControlName="vigencia" type="number"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.vigencia">
+                              <div class="error-message" *ngIf="infoClienteForm.get('vigencia').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">Teléfono*: </ion-label>
+                            <ion-input maxlength="10" type="tel" placeholder="Celular a 10 dígitos" formControlName="telefono"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.telefono">
+                              <div class="error-message" *ngIf="infoClienteForm.get('telefono').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                        <ion-item>
+                            <ion-label position="stacked">OCR: </ion-label>
+                            <ion-input maxlength="13" style="text-transform:uppercase" formControlName="ocr"></ion-input>
+                        </ion-item>
+                        <div class="validation-errors">
+                            <ng-container *ngFor="let validation of validation_messages.ocr">
+                              <div class="error-message" *ngIf="infoClienteForm.get('ocr').hasError(validation.type)">
+                                <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                              </div>
+                            </ng-container>
+                          </div>
+                    </form>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+
+    <div *ngIf="!fag">
+        <ion-progress-bar type="indeterminate"></ion-progress-bar>
+        <h1 class="ion-text-center">Obteniendo tus datos</h1>
+        <ion-list *ngIf="!fag">
+            <ion-item *ngFor="let item of [1,1,1,1,1,1,1,1,1,1]" class="animated flash slow infinite">
+                <ion-label>
+                    <h3>
+                        <ion-skeleton-text width="30%"></ion-skeleton-text>
+                    </h3>
+                    <h3>
+                        <ion-skeleton-text width="100%"></ion-skeleton-text>
+                    </h3>
+                    <p>
+                        <ion-skeleton-text width="100%"></ion-skeleton-text>
+                    </p>
+                </ion-label>
+                <ion-label slot="end" text-right>
+                    <ion-skeleton-text width="50%"></ion-skeleton-text>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-button color="primary" expand="block" (click)="obtenerDatos()" [disabled]="infoClienteForm && infoClienteForm.invalid">
+            <ion-ripple-effect></ion-ripple-effect>
+            CONTINUAR
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

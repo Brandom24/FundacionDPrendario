@@ -1,0 +1,155 @@
+<ion-content padding>
+    <ion-item class="item_ingreso">
+        <ion-label>¿Encontro la vivienda?</ion-label>
+        <p *ngIf="!existe_vivienda">No</p>
+        <p *ngIf="existe_vivienda">Si</p>
+        <ion-toggle [(ngModel)]="existe_vivienda" (ionChange)="change_existe()" color="primary"></ion-toggle>
+    </ion-item>
+
+<div *ngIf="existe_vivienda">
+<ion-item class="item_specifying">
+    <ion-label>Fotografias del exterior de la vivienda</ion-label>
+</ion-item>
+
+<div text-center (click)="tomarFoto(1)">
+<ion-card-content class="imagenes" *ngIf="!photos.get(1)" color="darck">
+    <img src="assets/img/camara.png">
+</ion-card-content>
+</div>
+<div text-center>
+    <ion-card-content class="imgFotos" *ngIf="photos.get(1)">
+        <img [src]="photos.get(1)">
+    </ion-card-content>
+</div>
+<ion-button class="btn_capturar" color="danger" expand="block" (click)="tomarFoto(1)" *ngIf="photos.get(1)">
+<ion-ripple-effect></ion-ripple-effect>
+Volver a capturar 
+</ion-button>
+    <!-- <ion-row>
+        <ion-col size="6" align-self-center text-center>
+            <div (click)="tomarFoto(1)">
+            <ion-card-content class="imagenes" *ngIf="!photos.get(1)" color="darck">
+                <img src="assets/img/camara.png">
+            </ion-card-content>
+            </div>
+            <div>
+                <ion-card-content class="imgFotos" *ngIf="photos.get(1)">
+                    <img [src]="photos.get(1)">
+                </ion-card-content>
+            </div>
+            <ion-button color="danger" fill="outline" (click)="tomarFoto(1)" *ngIf="photos.get(1)">
+            <ion-ripple-effect></ion-ripple-effect>
+            Volver a capturar 
+            </ion-button>
+        </ion-col>
+    
+        <ion-col size="6" align-self-center>
+            <div (click)="tomarFoto(2)">
+            <ion-card-content class="imagenes" *ngIf="!photos.get(2)" color="darck">
+                <img src="assets/img/camara.png">
+            </ion-card-content>
+            </div>
+            <div>
+                <ion-card-content class="imgFotos" *ngIf="photos.get(2)">
+                    <img [src]="photos.get(2)">
+                </ion-card-content>
+            </div>
+            <ion-button color="danger" expand="block" (click)="tomarFoto(2)" *ngIf="photos.get(2)">
+            <ion-ripple-effect></ion-ripple-effect>
+            Volver a capturar 
+            </ion-button>
+        </ion-col>
+    </ion-row> -->
+</div>
+    <ion-item class="item_ingreso" *ngIf="existe_vivienda">
+        <ion-label>¿Ingreso a la vivienda?</ion-label>
+        <p *ngIf="!ingreso">No</p>
+        <p *ngIf="ingreso">Si</p>
+        <ion-toggle [(ngModel)]="ingreso" (ionChange)="change()" color="primary"></ion-toggle>
+    </ion-item>
+
+<div text-center *ngIf="ingreso && existe_vivienda">
+    <ion-item class="item_specifying">
+        <ion-label>Fotografias del interior de la vivienda</ion-label>
+    </ion-item>
+    <div (click)="tomarFoto(2)">
+        <ion-card-content class="imagenes" *ngIf="!photos.get(2)" color="darck">
+            <img src="assets/img/camara.png">
+        </ion-card-content>
+        </div>
+        <div>
+            <ion-card-content class="imgFotos" *ngIf="photos.get(2)">
+                <img [src]="photos.get(2)">
+            </ion-card-content>
+        </div>
+        <ion-button class="btn_capturar" color="danger" expand="block" (click)="tomarFoto(2)" *ngIf="photos.get(2)">
+        <ion-ripple-effect></ion-ripple-effect>
+        Volver a capturar 
+    </ion-button>
+<!-- <ion-row>
+    <ion-col size="6" align-self-center>
+        <div (click)="tomarFoto(3)">
+        <ion-card-content class="imagenes" *ngIf="!photos.get(3)" color="darck">
+            <img src="assets/img/camara.png">
+        </ion-card-content>
+        </div>
+        <div>
+            <ion-card-content class="imgFotos" *ngIf="photos.get(3)">
+                <img [src]="photos.get(3)">
+            </ion-card-content>
+        </div>
+        <ion-button color="danger" expand="block" (click)="tomarFoto(3)" *ngIf="photos.get(3)">
+        <ion-ripple-effect></ion-ripple-effect>
+        Volver a capturar 
+        </ion-button>
+    </ion-col>
+
+    <ion-col size="6" align-self-center>
+        <div (click)="tomarFoto(4)">
+        <ion-card-content class="imagenes" *ngIf="!photos.get(4)" color="darck">
+            <img src="assets/img/camara.png">
+        </ion-card-content>
+        </div>
+        <div>
+            <ion-card-content class="imgFotos" *ngIf="photos.get(4)">
+                <img [src]="photos.get(4)">
+            </ion-card-content>
+        </div>
+        <ion-button color="danger" expand="block" (click)="tomarFoto(4)" *ngIf="photos.get(4)">
+        <ion-ripple-effect></ion-ripple-effect>
+        Volver a capturar 
+        </ion-button>
+    </ion-col>
+</ion-row> -->
+</div>
+<ion-list *ngIf="!ingreso && existe_vivienda">
+        <ion-list-header>
+                <ion-label>Seleccione razon por lo cual no se capturo fotorafia del interior de la vivienda</ion-label>
+        </ion-list-header>
+        <ion-radio-group>
+          <ion-item *ngFor="let razon of razon_array">
+            <ion-label>{{razon.razon}}</ion-label>
+            <ion-radio slot="start" (click)="razon_no_entro(razon)"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+</ion-list>
+
+<ion-list *ngIf="!existe_vivienda">
+        <ion-list-header>
+                <ion-label>Seleccione razon por lo cual no se capturo ninguna fotografia</ion-label>
+        </ion-list-header>
+        <ion-radio-group>
+          <ion-item *ngFor="let razon of razon_no">
+            <ion-label>{{razon.razon}}</ion-label>
+            <ion-radio slot="start" (click)="razon_no_fotos(razon)"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+</ion-list>
+
+<div text-center>
+    <ion-button class="btn_final" expand="block" (click)="sendPhoto()">
+        Finalizar visita
+    </ion-button>
+</div>
+
+</ion-content>

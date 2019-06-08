@@ -1,0 +1,141 @@
+<!-- <div *ngIf="!esVerificado">
+    <envio-otp (esVerificado)="comprobarEsVerficado($event)"></envio-otp>
+    <hr>
+</div> -->
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+        </div>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <envio-otp *ngIf="!esVerificado" (esVerificado)="comprobarEsVerficado($event)"></envio-otp>
+
+    <div *ngIf="esVerificado">
+        <div>
+            <br>
+            <ion-row justify-content-center align-items-center>
+                <ion-col justify-content-center align-items-center>
+                    <div text-center>Archivo digital</div>
+                </ion-col>
+                <ion-item-divider></ion-item-divider>
+            </ion-row>
+        </div>
+        <ion-grid>
+            <ion-row class="style_header_col">
+                <ion-col>
+                    <div>
+                        Tipo
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        Nombre
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        Tipo documental
+                    </div>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let docto of doctosResumen" class="style_row_table">
+                <ion-col>
+                    <div>
+                        <ion-icon name="{{docto.logoTipo}}"></ion-icon>
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        {{docto.nombreDoc}}
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        {{docto.tipoIdentificacion}}
+                    </div>
+                </ion-col>
+            </ion-row>
+            <!-- <ion-row class="style_row_table">
+                <ion-col>
+                    <div>
+                        <ion-icon name="document"></ion-icon>
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        INE Reverso
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        Id Oficial
+                    </div>
+                </ion-col>
+            </ion-row> -->
+            <!-- <ion-row class="style_row_table" *ngIf="consultaBuro">
+                <ion-col>
+                    <div>
+                        <ion-icon name="document"></ion-icon>
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        CFE
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        Comprobante
+                    </div>
+                </ion-col>
+            </ion-row> -->
+            <!-- <ion-row class="style_row_table" *ngIf="comprobanteCFE">
+                <ion-col>
+                    <div>
+                        <ion-icon name="document"></ion-icon>
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        Reporte Buró
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>
+                        Contrato
+                    </div>
+                </ion-col>
+            </ion-row> -->
+        </ion-grid>
+
+        <ion-list padding>
+            <ion-item>
+                <ion-label position="stacked">*Nombre: </ion-label>
+                <ion-label position="stacked">{{cliente.getNombre()}} {{cliente.getPaterno()}} {{cliente.getMaterno()}}</ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">*CURP: </ion-label>
+                <ion-label position="stacked">{{cliente.getCurp()}} </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label position="stacked">*Teléfono: </ion-label>
+                <ion-label position="stacked">{{telefono}} </ion-label>
+            </ion-item>
+        </ion-list>
+    </div>
+
+</ion-content>
+<ion-footer *ngIf="esVerificado">
+    <ion-toolbar>
+        <ion-button color="primary" class="" expand="block" (click)="finalizar()">
+            <ion-ripple-effect></ion-ripple-effect>
+            FINALIZAR
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

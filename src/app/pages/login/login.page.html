@@ -1,0 +1,31 @@
+<ion-content class="contenido" padding>
+
+    <div class="header_logo" id="logo" padding text-center>
+        <img src="./assets/img/logo.jpg">
+    </div>
+    <div text-right>
+        {{estampaTiempo}}
+    </div>
+    <div text-right>
+        Versión: 1.0.7
+    </div>
+
+    <div class="fondo_green">
+        <ion-card>
+            <ion-card-content>
+                <div text-center>
+                    <form>
+
+                        <ion-input maxlength="15" [(ngModel)]="user" class="datos_input" type="email" name="email" placeholder="Usuario"></ion-input>
+                        <ion-input maxlength="15" [(ngModel)]="password" class="datos_input" type="password" name="password" placeholder="Contraseña"></ion-input>
+
+                        <ion-button [disabled]=" user.length < 3 || password.length < 3" class="boton_style" (click)="verifyUser()">Iniciar sesión
+                            <ion-icon slot="end" name="log-in"></ion-icon>
+                        </ion-button>
+                    </form>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+</ion-content>
