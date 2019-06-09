@@ -37,7 +37,7 @@
                         </ion-select>
                     </ion-item>
                     <ion-item>
-                        <ion-label position="stacked">Nro. Identif.*: </ion-label>
+                        <ion-label position="stacked">Num. Identifificacion.*: </ion-label>
                         <ion-input style="text-transform:uppercase" formControlName="numId" maxlength="20"></ion-input>
                     </ion-item>
                     <div class="validation-errors">
@@ -145,7 +145,7 @@
 
                     <ion-list *ngFor="let tel of listaTelefonos">
                         <ion-item>
-                          <ion-input [ngModelOptions]="{standalone: true}" type="tel" maxlength="10" [ngModel]="tel.getNumTel()" (ngModelChange)="tel.setNumTel($event)" placeholder="Telefono"></ion-input>
+                          <ion-input maxlength="10" [ngModelOptions]="{standalone: true}" type="tel" maxlength="10" [ngModel]="tel.getNumTel()" (ngModelChange)="tel.setNumTel($event)" placeholder="Telefono"></ion-input>
                         </ion-item>
                     </ion-list>
 
@@ -190,6 +190,24 @@
                             <ion-select-option *ngFor="let g of catalogoTipoDomic">{{g.name}}</ion-select-option>
                         </ion-select>
                     </ion-item>
+                    <!-- <ion-item>
+                        <ion-label position="stacked">Estado:</ion-label>
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoEstado" formControlName="estado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
+                            <ion-select-option *ngFor="let state of catalogoEstado" value="{{state.id_catalogue}}">{{state.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item *ngIf="catalogoEstado">
+                        <ion-label position="stacked">Ciudad:</ion-label>
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoCiudad" formControlName="ciudad" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('town',catalogoColonia,$event)">
+                            <ion-select-option *ngFor="let city of catalogoCiudad" value="{{city.id_catalogue}}">{{city.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item *ngIf="catalogoCiudad">
+                        <ion-label position="stacked">Colonia*:</ion-label>
+                        <ion-select placeholder="Seleccione" *ngIf="catalogoColonia" formControlName="colonia" okText="Ok" cancelText="Cancelar">
+                            <ion-select-option *ngFor="let col of catalogoColonia" value="{{col.id_catalogue}}">{{col.name}}</ion-select-option>
+                        </ion-select>
+                    </ion-item> -->
                     <ion-item>
                         <ion-label position="stacked">Estado:</ion-label>
                         <ion-select placeholder="Seleccione" *ngIf="catalogoEstado" formControlName="estado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
@@ -241,7 +259,7 @@
                 </form>
                 
                 <!-- Domicilio dinamico -->
-                <ion-item color="light">
+                <!-- <ion-item color="light">
                     <ion-label>
                         Domicilio
                     </ion-label>
@@ -285,7 +303,7 @@
                         <ion-input style="text-transform:uppercase" [ngModel]="domi.getNumInter()" (ngModelChange)="domi.setNumInter($event)" maxlength="15"></ion-input>
                     </ion-item>
                 </ion-card>
-                </ion-list>
+                </ion-list> -->
 
             </ion-col>
         </ion-row>

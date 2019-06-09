@@ -85,7 +85,7 @@ export class LoginService {
     return this.http.post(URL_SERVICIOS + '/auth/login', formData, {headers})
               .subscribe( async data => {
 
-                console.log(data);
+                console.log('verifyUser', data);
                 this.result = data['resultOK'];
                 this.message = data['message'];
                 this.typeUser = data['user'];

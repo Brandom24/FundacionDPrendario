@@ -40,9 +40,12 @@ export class InfoGralesPage implements OnInit {
   catalogoActEmpresa: CatalogoValuesOut[]=[];
   catalogoPais: CatalogoValuesOut[]=[];
   catalogoTipoDomic: CatalogoValuesOut[]=[];
-  catalogoEstado: string[]=[];
-  catalogoCiudad: string[]=[];
-  catalogoColonia: string[]=[];
+  // catalogoEstado: CatalogoValuesOut[]=[];
+  // catalogoCiudad: CatalogoValuesOut[] = [];
+  // catalogoColonia: CatalogoValuesOut[] = [];
+  catalogoEstado: String[]=[];
+  catalogoCiudad: String[] = [];
+  catalogoColonia: String[] = [];
   regex: Regex = new Regex();
   catalogosCargados: number = 0;
   bearer: string;
@@ -174,23 +177,24 @@ export class InfoGralesPage implements OnInit {
       if(!this.cliente)
         this.cliente = new Cliente();
 
-        this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2('state', this.bearer, '160').subscribe(
-          (respuesta: any) =>{
-            if(respuesta.code == -9999)
-            {
-              respuesta.data.forEach(elemento => {
-              // let elementoCat = new CatalogoValuesOut(0,elemento[1],"","",elemento[0]);
-              this.catalogoEstado.push(elemento[1]+'|'+elemento[0]);
-              });
-              this.catalogoEstado.sort();
-              this.catalogosCargados += 1;
-            }
-            else
-              this.catalogoEstado = [];
-          },
-          (err: HttpErrorResponse)=>{
-            console.log(err)
+    this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2('state', this.bearer, '160').subscribe(
+      (respuesta: any) =>{
+        if(respuesta.code == -9999)
+        {
+          respuesta.data.forEach(elemento => {
+          // let elementoCat = new CatalogoValuesOut(0,elemento[1],"","",elemento[0]);
+          this.catalogoEstado.push(elemento[1]+'|'+elemento[0]);
+          // this.catalogoEstado.push(elementoCat);
           });
+          this.catalogoEstado.sort();
+          this.catalogosCargados += 1;
+        }
+        else
+          this.catalogoEstado = [];
+      },
+      (err: HttpErrorResponse)=>{
+        console.log(err)
+      });
     
     this.infoClienteForm = this.formBuilder.group({
 
@@ -244,15 +248,20 @@ export class InfoGralesPage implements OnInit {
     });
   }
 
-  onChangeSelect(nombre: string, catalogo: string[], $event) {
-
+  onChangeSelect(nombre: string, catalogo: String[], $event) {
+    console.log(catalogo.length);
+    
+    if(nombre === 'state') {
+    this.catalogoCiudad = [];
+      
+    }
+    console.log(nombre, $event.detail.value);
     if($event.detail.value)
     {
       this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2(nombre, this.bearer, $event.detail.value).subscribe(
         (respuesta: any) =>{
-          console.log(nombre, $event.detail.value);
+          console.log('Dentre de respuesta', catalogo.length);
           console.log(respuesta);
-          catalogo = [];
           if(respuesta.code == -9999)
           {
             respuesta.data.forEach(elemento => {
@@ -266,25 +275,19 @@ export class InfoGralesPage implements OnInit {
             catalogo = [];
         },
         (err: HttpErrorResponse)=>{
-          console.log(err)
+          console.log('Error:', err)
         });
     }
+
   }
 
   // onChangeSelect(nombre: string, catalogo: CatalogoValuesOut[], $event)
   // {
-  //   let opcionID = $event.detail.value;
-  //   if(nombre === 'state' && this.otroPais !== 0){
-  //     this.otroPais += 1;
-  //     opcionID = 160;
-  //   }
-  //   else
-  //   opcionID = $event.detail.value;
-
-  //   if(opcionID)
+  //   if($event.detail.value)
   //   {
   //     this.catalogoService.obtenerElementosCatalogoPorNombreDepConFilter2(nombre, this.bearer, $event.detail.value).subscribe(
   //       (respuesta: any) =>{
+  //         catalogo = [];
   //         console.log(respuesta);
   //         if(respuesta.code == -9999)
   //         {

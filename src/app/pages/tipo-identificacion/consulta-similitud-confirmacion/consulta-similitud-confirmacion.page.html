@@ -188,7 +188,7 @@
         </ion-list>
     </div>
 </ion-content>
-<ion-footer>
+<ion-footer *ngIf="fag">
     <ion-toolbar>
         <ion-button color="primary" expand="block" (click)="obtenerDatos()" [disabled]="infoClienteForm && infoClienteForm.invalid">
             <ion-ripple-effect></ion-ripple-effect>
