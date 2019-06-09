@@ -98,12 +98,14 @@ export class CapturaDomicilioPage implements OnInit {
   }
 
   extraerDatosDomicilio() {
+    if(this.frontImg) {
     this.actualizarActivity("EN PROCESO",11);
     this.esDatosObtenidos = false;
     this.imagen = new Imagen();
     this.blobComprobante = this.imagen.convertirImagenEnBlob(this.frontImg);
     this.b64File = this.frontImg.split(',')[1];
     let jsonResDomic: JsonResDomicilio;
+    this.navCtrl.navigateRoot('captura-domicilio-confirm');
     this.documentosService.extraerDatosOcrDomicilio( this.saveS.getOperationID(),this.blobComprobante,this.b64File, this.login.token).subscribe(
       (respuesta: any) => {
         jsonResDomic = respuesta;
@@ -112,7 +114,7 @@ export class CapturaDomicilioPage implements OnInit {
           this.actualizarActivity("FINALIZADO",11);
           this.actualizarActivity("EN PROCESO",12);
           this.saveS.setDatosDomicilio(jsonResDomic);
-          this.navCtrl.navigateRoot('captura-domicilio-confirm');
+          
           
           // this.localStorage.set("comprobanteDomic",jsonResDomic.tasReference);
           // this.domicilioForm.controls.calle.setValue(jsonResDomic.calle);
@@ -133,8 +135,29 @@ export class CapturaDomicilioPage implements OnInit {
       (err: HttpErrorResponse) => {
         console.log('Ocurrió un error en la extracción');
         console.log(err);
-      }
-    );
+      });
+    } else {
+      this.alerta();
+    }
+    
+  }
+
+  async alerta() {
+    const alert = await this.alertCtrl.create({
+      header: 'Faltan datos',
+      message: 'Para poder avanzar capture la foto',
+      buttons: [
+        {
+          text: 'Entiendo',
+          role: 'volver',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            // Accion del boton
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
   
   actualizarActivity(estatus: string, secuenciaId:number) {

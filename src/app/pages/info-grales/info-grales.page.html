@@ -208,7 +208,7 @@
                             <ion-select-option *ngFor="let col of catalogoColonia" value="{{col.id_catalogue}}">{{col.name}}</ion-select-option>
                         </ion-select>
                     </ion-item> -->
-                    <ion-item>
+                    <ion-item *ngIf="catalogoPais">
                         <ion-label position="stacked">Estado:</ion-label>
                         <ion-select placeholder="Seleccione" *ngIf="catalogoEstado" formControlName="estado" okText="Ok" cancelText="Cancelar" (ionChange)="onChangeSelect('city',catalogoCiudad,$event)">
                             <ion-select-option *ngFor="let state of catalogoEstado" value="{{state.split('|')[1]}}">{{state.split('|')[0]}}</ion-select-option>

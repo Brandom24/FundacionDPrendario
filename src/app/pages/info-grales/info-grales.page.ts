@@ -43,9 +43,9 @@ export class InfoGralesPage implements OnInit {
   // catalogoEstado: CatalogoValuesOut[]=[];
   // catalogoCiudad: CatalogoValuesOut[] = [];
   // catalogoColonia: CatalogoValuesOut[] = [];
-  catalogoEstado: String[]=[];
-  catalogoCiudad: String[] = [];
-  catalogoColonia: String[] = [];
+  catalogoEstado = [];
+  catalogoCiudad = [];
+  catalogoColonia = [];
   regex: Regex = new Regex();
   catalogosCargados: number = 0;
   bearer: string;

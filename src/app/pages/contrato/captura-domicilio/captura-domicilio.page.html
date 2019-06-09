@@ -24,13 +24,13 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col size="4" align-self-center>
-        <div (click)="getImagenFront()">
+        <div>
           <ion-card-content class="imagenes" *ngIf="!frontImg" color="darck">
               <img src="../../../../assets/img/agre_img.png">
           </ion-card-content>
         </div>
-        <div (click)="getImagenFront()">
-            <ion-card-content class="imgFotos" *ngIf="frontImg">
+        <div>
+            <ion-card-content *ngIf="frontImg">
                 <img [src]="frontImg">
             </ion-card-content>
         </div>
@@ -57,7 +57,7 @@
 <ion-footer>
     <ion-toolbar>
       <!--  [disabled]="!isenabled || !isenabled2"   -->
-        <ion-button color="primary" class="" expand="block" (click)="extraerDatosDomicilio()" >
+        <ion-button [disabled]="!frontImg" color="primary" class="" expand="block" (click)="extraerDatosDomicilio()" >
             <ion-ripple-effect></ion-ripple-effect>
             CONTINUAR
           </ion-button>

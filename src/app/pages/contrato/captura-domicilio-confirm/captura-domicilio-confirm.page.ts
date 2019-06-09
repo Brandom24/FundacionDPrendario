@@ -72,7 +72,7 @@ export class CapturaDomicilioConfirmPage implements OnInit {
 
   goFirmaContrato() 
   {
-    alert("Datos guardados");
+    // alert("Datos guardados");
     this.navCtrl.navigateRoot('firma-autografa');
   }
 
@@ -97,7 +97,7 @@ export class CapturaDomicilioConfirmPage implements OnInit {
           if(this.saveS.getResumenDoctos() != null)
           {
             this.saveS.getResumenDoctos().push(resumenDocto);
-            this.goFirmaContrato();
+            // this.goFirmaContrato();
           }
           else
           {
