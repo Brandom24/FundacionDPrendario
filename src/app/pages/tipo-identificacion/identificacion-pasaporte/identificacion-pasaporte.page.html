@@ -1,14 +1,13 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <div slot="end">
-            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
-        </div>
-        <!-- <ion-title>Pasaporte-identificacion</ion-title> -->
-    </ion-toolbar>
-</ion-header>
+        <ion-toolbar color="primary">
+            <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+              </ion-buttons>
+            <div slot="end">
+                <img src="../../../assets/img/mini-logoTrans_letra_Blanca.png" class="style_logo_header">
+            </div>
+        </ion-toolbar>
+    </ion-header>
 
 <ion-content>
     <div>
@@ -34,10 +33,10 @@
                         <img [src]="frontImg">
                     </ion-card-content>
                 </div>
-                <div class="custom-file ">
+                 <div class="custom-file ">
                     <input #img_file type="file" class="custom-file-input" id="customFile" (change)="changeListenerF($event)" accept="image/jpeg,image/png">
                     <label class="custom-file-label" for="customFile"></label>
-                </div>
+                </div>  
             </ion-col>
             <ion-col size="8" align-self-center>
                 <span>Escanea el frente de tu pasaporte</span>

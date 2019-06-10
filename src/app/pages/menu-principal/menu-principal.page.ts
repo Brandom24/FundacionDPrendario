@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, Platform } from '@ionic/angular';
 import { GuardarStorageService } from 'src/app/services/guardar-storage.service';
 import { LoginService } from 'src/app/services/login.service';
 import { JsonData } from 'src/app/services/actividades/model/json-data.model';
 import { JsonMetadata } from 'src/app/services/actividades/model/json-metadata.model';
 import { JsonDatosActivity } from 'src/app/services/actividades/model/json-datos-activity.model';
 import { ActivitiesService } from 'src/app/services/actividades/activities-service';
+import { LoadingService } from 'src/app/services/loading.service';
+
+declare var FingersBidEnrollment: any;
 
 @Component({
   selector: 'app-menu-principal',
@@ -19,40 +22,77 @@ export class MenuPrincipalPage implements OnInit {
     private navCtrl: NavController,
     private saveS: GuardarStorageService,
     private login: LoginService,
+    private loading: LoadingService,
+    private platform: Platform,
     private activityService: ActivitiesService
   ) { }
 
   ngOnInit() {
-    
+
   }
 
   iniciarFlujo(flujo: string) {
-    
     this.saveS.setTipoFlujo(flujo);
+    // lla huellas, consultar y tomar desicion
+    // this.fingerVerify();
+    this.crearDatosActivity();
+    this.navCtrl.navigateRoot('tipo-identificacion');
+  }
+
+  crearDatosActivity() {
     // crearDatosActivity
     const productId = 1;
     let secuence = 0;
-    if(this.saveS.getTipoFlujo()=='alhajas')
+    if (this.saveS.getTipoFlujo() === 'alhajas') {
       secuence = 1;
-    else
+    } else {
       secuence = 6;
-    const jsonData = new JsonData(+productId,'', 'PENDIENTE', '1', '', secuence, 1);
+    }
+    const jsonData = new JsonData(+productId, '', 'PENDIENTE', '1', '', secuence, 1);
     const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
     const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, 0);
     this.activityService.crearDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
       (response: any) => {
-      if(response.code == -9999)
-      {
-        let operationId = response.data.operationId;
+      if (response.code === -9999) {
+        const operationId = response.data.operationId;
         this.saveS.setOperationID(operationId);
-        this.navCtrl.navigateRoot('tipo-identificacion');
+        // this.navCtrl.navigateRoot('tipo-identificacion');
       }
       }, (err) => {
         console.log(err);
       }
     );
-   
   }
 
+  fingerVerify() {
+    this.loading.present('Cargando...');
+    if (this.platform.is('android')) {
+      this.platform.ready().then(async () => {
+      if (typeof FingersBidEnrollment !== 'undefined') {
+        FingersBidEnrollment.initializeVerify('000', 'Donde',
+          async (jsonFingerPrintsString) =>  {
+              console.log('OnSucces initialize FingersBidEnrollment', JSON.stringify(jsonFingerPrintsString));
+              console.log(jsonFingerPrintsString);
+              if (jsonFingerPrintsString !== '') {
+                this.loading.dismiss();
+                this.login.setFingerVerify(jsonFingerPrintsString);
+                this.login.verifyFinger();
+              } else {
+                this.loading.dismiss();
+                alert('Tu huellas NO se ha encontrado correctamente');
+              console.log('else jsonFingerPrintsString FingersBidEnrollment', jsonFingerPrintsString);
+              }
+            }, (error_initialize) => {
+              this.loading.dismiss();
+              alert('Tu huellas NO se han registrado correctamente');
+              console.log('error_initialize FingersBidEnrollment', error_initialize);
+            });
+        } else {
+          this.loading.dismiss();
+          alert('Inicializando completomento, por favor vuelva intentarlo.');
+        }
+      });
+    }
+  }
 
 }

@@ -1,12 +1,11 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="primary">
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
-        </ion-buttons>
+          </ion-buttons>
         <div slot="end">
-            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
+            <img src="../../../assets/img/mini-logoTrans_letra_Blanca.png" class="style_logo_header">
         </div>
-        <!-- <ion-title>Consulta similitud Confirmacion</ion-title> -->
     </ion-toolbar>
 </ion-header>
 
@@ -72,7 +71,7 @@
                         </ion-item>
                         <ion-item>
                             <ion-label position="stacked">CURP: </ion-label>
-                            <ion-input maxlength="18" style="text-transform:uppercase" formControlName="curp"></ion-input>
+                            <ion-input maxlength="18" style="text-transform:uppercase" formControlName="curp" autocapitalize="on"></ion-input>
                         </ion-item>
                         <div class="validation-errors">
                             <ng-container *ngFor="let validation of validation_messages.curp">
@@ -83,7 +82,7 @@
                           </div>
                         <ion-item>
                             <ion-label position="stacked">RFC*: </ion-label>
-                            <ion-input maxlength="13" style="text-transform:uppercase" formControlName="rfc"></ion-input>
+                            <ion-input maxlength="13" style="text-transform:uppercase" formControlName="rfc" autocapitalize="on"></ion-input>
                         </ion-item>
                         <div class="validation-errors">
                             <ng-container *ngFor="let validation of validation_messages.rfc">

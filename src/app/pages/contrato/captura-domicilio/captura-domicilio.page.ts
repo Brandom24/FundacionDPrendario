@@ -11,6 +11,7 @@ import { JsonData } from 'src/app/services/actividades/model/json-data.model';
 import { JsonMetadata } from 'src/app/services/actividades/model/json-metadata.model';
 import { JsonDatosActivity } from 'src/app/services/actividades/model/json-datos-activity.model';
 import { ActivitiesService } from 'src/app/services/actividades/activities-service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class CapturaDomicilioPage implements OnInit {
     private navCtrl: NavController,
     private saveS: GuardarStorageService,
     private login: LoginService,
+    private loading: LoadingService,
     private documentosService: DocumentosService,
     public camera: Camera,
     private activityService: ActivitiesService
@@ -98,6 +100,7 @@ export class CapturaDomicilioPage implements OnInit {
   }
 
   extraerDatosDomicilio() {
+    this.loading.present('Verificando datos..');
     if(this.frontImg) {
     this.actualizarActivity("EN PROCESO",11);
     this.esDatosObtenidos = false;
@@ -108,6 +111,7 @@ export class CapturaDomicilioPage implements OnInit {
     this.navCtrl.navigateRoot('captura-domicilio-confirm');
     this.documentosService.extraerDatosOcrDomicilio( this.saveS.getOperationID(),this.blobComprobante,this.b64File, this.login.token).subscribe(
       (respuesta: any) => {
+        this.loading.dismiss();
         jsonResDomic = respuesta;
         if (jsonResDomic.resultOK) {
           // guardar informacion del domicilio
@@ -129,14 +133,17 @@ export class CapturaDomicilioPage implements OnInit {
           // this.domicilioForm.controls.nombre.setValue(jsonResDomic.nombre);
           this.esDatosObtenidos = true;
         } else {
+          this.loading.dismiss();
           alert('Por el momento no es posible extraer la información, llena los campos manualmente o intenta de nuevo');
         }
       },
       (err: HttpErrorResponse) => {
+        this.loading.dismiss();
         console.log('Ocurrió un error en la extracción');
         console.log(err);
       });
     } else {
+      this.loading.dismiss();
       this.alerta();
     }
     

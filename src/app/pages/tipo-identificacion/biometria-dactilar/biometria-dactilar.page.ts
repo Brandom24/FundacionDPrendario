@@ -154,7 +154,7 @@ export class BiometriaDactilarPage implements OnInit {
                   this.actualizarActivity("FINALIZADO",this.secuenceId);
                   this.validateCapture = true;
                   const { role, data } = await loading.onDidDismiss();
-                  /*  FingersBidEnrollment.enroll(jsonFingerPrintsString,
+                    FingersBidEnrollment.enroll(jsonFingerPrintsString,
                       (result_enroll) =>  {
                         this.idFinger = true;
                         this.idFinger2 = false;
@@ -179,7 +179,7 @@ export class BiometriaDactilarPage implements OnInit {
                           alert('Error de comunicacion: ' + error_enroll);
                           console.log('OnError FingersBidEnrollment', error_enroll);
                         }
-                    }); */
+                    });
                       console.log('Se inicializo correctamente ó termino');
                     }, (error_initialize) => {
                       this.idFinger2 = true;

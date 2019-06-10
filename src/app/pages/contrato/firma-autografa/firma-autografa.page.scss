@@ -1,8 +1,20 @@
 .style_pad {
-    border: dotted;
+    /* border: dotted; */
     border-color: #018A5E;
     widows: 100%;
+    canvas {
+        border: 1px solid black !important;
+    }
 }
+
+.style_pad canvas {
+    border: 1px solid black !important;
+}
+
+.canvas{
+    border: 1px solid black !important;
+}
+
 
 .btn-cancelar {
     background-color: #ffd200 !important;

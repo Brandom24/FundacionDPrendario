@@ -1,13 +1,12 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="primary">
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
         <div slot="end">
-            <img src="../../../assets/img/logo_mini.png" class="style_logo_header">
-          </div>  
-        <!-- <ion-title>Biometria</ion-title> -->
-      </ion-toolbar>
+            <img src="../../../assets/img/mini-logoTrans_letra_Blanca.png" class="style_logo_header">
+        </div>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
@@ -49,8 +48,8 @@
   </ion-content>
   <ion-footer>
       <ion-toolbar>
-          <!-- [disabled]="!idFinger || !idFinger2"  -->
-          <ion-button color="primary" class="color_button" expand="block" (click)="onConsultaSimilitud()">
+          <!-- [disabled]="!idFinger || !idFinger2"  [disabled]="!idFinger"-->
+          <ion-button color="primary" class="color_button" expand="block" (click)="onConsultaSimilitud()" >
               <ion-ripple-effect></ion-ripple-effect>
               CONTINUAR
             </ion-button>

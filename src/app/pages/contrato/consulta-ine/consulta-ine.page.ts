@@ -136,11 +136,22 @@ changeListenerINE($event): void {
     const myReader: FileReader = new FileReader();
     myReader.onloadend = (e) => {
       this.frontImg = myReader.result.toString();
+      console.log('frontImg');
+      console.log(this.frontImg);
       // this.saveS.guardarStorageImagenF(this.capturasINE);
       // this.imgCapturada.emit(capturas);
     };
     myReader.readAsDataURL(file);
   }
+  if (this.frontImg) {
+    // enable the button
+    this.isenabled = true;
+    this.isValidoSpinnerFront = false;
+    } else {
+    // disable the button
+    this.isenabled = false;
+    this.isValidoSpinnerFront = false;
+    }
 }
 
 goCargarDocumento() {

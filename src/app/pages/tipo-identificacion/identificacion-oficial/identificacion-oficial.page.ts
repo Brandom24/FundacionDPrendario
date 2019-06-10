@@ -250,10 +250,34 @@ export class IdentificacionOficialPage implements OnInit {
       }
       this.esCargando = false;
     },
-    (err: any) => {
+    (error: HttpErrorResponse) => {
       this.esCargando = false;
-      console.log(err);
-      // alert('Hubo un error al extraer los datos, intenta de nuevo');
+      console.log(error);
+      switch (error['status']) {
+        case 401:
+          alert('Es necesario iniciar session, nuemente para continuar');
+          this.navCtrl.navigateRoot('login');
+          break;
+
+          case 404:
+          alert('Es necesario iniciar session, nuemente para continuar');
+              this.navCtrl.navigateRoot('login');
+            break;
+
+          case 500:
+          alert('Por favor, reintentar para continuar');
+          this.extraerOCR();
+            break;
+
+          case 501:
+          alert('Por favor, reintentar para continuar');
+          this.extraerOCR();
+            break;
+        default:
+          alert('Es necesario iniciar session, nuemente para continuar');
+            this.navCtrl.navigateRoot('login');
+          break;
+      }
       // this.navCtrl.navigateRoot('login');
     });
   }
