@@ -7,6 +7,8 @@ import { GuardarStorageService } from 'src/app/services/guardar-storage.service'
 import { JsonData } from 'src/app/services/actividades/model/json-data.model';
 import { JsonMetadata } from 'src/app/services/actividades/model/json-metadata.model';
 import { JsonDatosActivity } from 'src/app/services/actividades/model/json-datos-activity.model';
+import { Enroll } from './modal/Enroll.model';
+import { EnrollService } from 'src/app/services/enroll.service';
 
 declare var IdentyFingers: any;
 declare var ZoomAuthenticationHybrid: any;
@@ -32,7 +34,7 @@ export class BiometriaDactilarPage implements OnInit {
   isValidoRostro: boolean;
   secuenceId: number;
   validateCapture: boolean;
-
+  jsonEnroll: Enroll;
 
   constructor(
     private alertCtrl: AlertController,
@@ -43,14 +45,21 @@ export class BiometriaDactilarPage implements OnInit {
     private login: LoginService,
     private activityService: ActivitiesService,
     private saveS: GuardarStorageService,
-  ) { 
-    if(this.saveS.getTipoFlujo() == 'alhajas')
-      this.secuenceId = 3;
-    else
-      this.secuenceId = 8;
+    private enroll: EnrollService,
+  ) {
   }
 
   ngOnInit() {
+    if (this.saveS.getTipoFlujo() === 'alhajas') {
+      this.secuenceId = 3;
+    } else {
+      this.secuenceId = 8;
+    }
+
+    console.log('getOperationID');
+    console.log(this.saveS.getOperationID());
+    console.log('getPersonId');
+    console.log(this.saveS.getPersonId());
   }
 
   onConsultaSimilitud() {
@@ -141,53 +150,17 @@ export class BiometriaDactilarPage implements OnInit {
         if (this.platform.is('android')) {
               this.platform.ready().then(async () => {
               if (typeof FingersBidEnrollment !== 'undefined') {
-              // FingersBidEnrollment.initialize(userId, this.onSuccess, this.onError);
-              this.userId = 0;
-                FingersBidEnrollment.initialize(this.userId, 'Donde',
+                FingersBidEnrollment.initialize(0, 'Donde',
                   async (jsonFingerPrintsString) =>  {
-                  this.idFinger = true;
-                  this.idFinger2 = false;
-                  this.habilitarButonHuellas();
-                  this.habilitarButonRostro();
-                  this.DesactivarSipnnerHuellas();
-                  this.presentAlertConfirm('Tu huellas se han registrado correctamente');
-                  this.actualizarActivity("FINALIZADO",this.secuenceId);
-                  this.validateCapture = true;
+                  console.log('Tu huellas son : ');
+                  console.log(jsonFingerPrintsString);
+                  // llamar metodo para guardar huellas en el back
+                  this.guardarHuellas(jsonFingerPrintsString);
+                  // this.actualizarActivity('FINALIZADO', this.secuenceId);
+
                   const { role, data } = await loading.onDidDismiss();
-                    FingersBidEnrollment.enroll(jsonFingerPrintsString,
-                      (result_enroll) =>  {
-                        this.idFinger = true;
-                        this.idFinger2 = false;
-                        this.habilitarButonHuellas();
-                        this.habilitarButonRostro();
-                        this.DesactivarSipnnerHuellas();
-                        console.log('OnSucces FingersBidEnrollment', result_enroll);
-                      }, (error_enroll) =>  {
-                        if ('Falla al enrolar:422' === error_enroll) {
-                        this.idFinger = true;
-                        this.idFinger2 = false;
-                        this.habilitarButonHuellas();
-                        this.habilitarButonRostro();
-                        this.DesactivarSipnnerHuellas();
-                        console.log('Usuario Ya esta registrado en FingersBidEnrollment', error_enroll);
-                        } else {
-                          this.idFinger = false;
-                          this.idFinger2 = true;
-                          this.habilitarButonHuellas();
-                          this.habilitarButonRostro();
-                          this.DesactivarSipnnerHuellas();
-                          alert('Error de comunicacion: ' + error_enroll);
-                          console.log('OnError FingersBidEnrollment', error_enroll);
-                        }
-                    });
-                      console.log('Se inicializo correctamente ó termino');
-                    }, (error_initialize) => {
-                      this.idFinger2 = true;
-                      this.idFinger = false;
-                      this.habilitarButonHuellas();
-                      this.habilitarButonRostro();
-                      this.DesactivarSipnnerHuellas();
-                      this.presentAlertConfirm('Tu huellas NO se han registrado correctamente');
+                  console.log('Se inicializo correctamente ó termino');
+                   } , (error_initialize) => {
                       console.log('error_initialize FingersBidEnrollment', error_initialize);
                     });
 
@@ -207,7 +180,55 @@ export class BiometriaDactilarPage implements OnInit {
 
   }
 
- 
+  guardarHuellas(jsonFingerPrintsString: any) {
+    console.log('guardarHuellas jsonFingerPrintsString');
+    console.log(jsonFingerPrintsString);
+    const finger = JSON.parse(jsonFingerPrintsString);
+    if (jsonFingerPrintsString) {
+      this.jsonEnroll = new Enroll();
+    this.jsonEnroll.enrollmentCode = this.saveS.getSystemCode();
+    this.jsonEnroll.personID = this.saveS.getPersonId();
+    this.jsonEnroll.leftindex = finger['leftindex'];
+    this.jsonEnroll.leftmiddle = finger['leftmiddle'];
+    this.jsonEnroll.leftring = finger['leftring'];
+    this.jsonEnroll.leftlittle = finger['leftlittle'];
+    this.jsonEnroll.rightindex = finger['rightindex'];
+    this.jsonEnroll.rightmiddle = finger['rightmiddle'];
+    this.jsonEnroll.rightring = finger['rightring'];
+    this.jsonEnroll.rightlittle = finger['rightlittle'];
+    console.log('this.jsonEnroll');
+    console.log(this.jsonEnroll);
+    // consumir servicio para guardar huellas
+    this.enroll.guardarFingerEnroll(this.jsonEnroll, this.login.token).subscribe(
+      (result) => {
+        console.log('guardarFingerEnroll');
+        console.log(result);
+
+        this.validateCapture = true;
+        this.idFinger = true;
+        this.idFinger2 = false;
+        this.habilitarButonHuellas();
+        this.habilitarButonRostro();
+        this.DesactivarSipnnerHuellas();
+      }, (error) => {
+        console.log('Error guardarFingerEnroll');
+        console.log(error);
+
+        this.idFinger2 = true;
+        this.idFinger = false;
+        this.habilitarButonHuellas();
+        this.habilitarButonRostro();
+        this.DesactivarSipnnerHuellas();
+        this.presentAlertConfirm('Tu huellas NO se han registrado correctamente');
+
+      }
+    );
+    } else {
+      alert('No se retornando Huellas' + JSON.stringify(jsonFingerPrintsString));
+    }
+    
+
+  }
 
   sigPagCancel() {
    // this.navCtrl.push(DashboardPage);
@@ -285,16 +306,17 @@ export class BiometriaDactilarPage implements OnInit {
     await alert.present();
   }
 
-  actualizarActivity(estatus: string, secuenciaId:number) {
+  actualizarActivity(estatus: string, secuenciaId: number) {
     const code = '';
     const productId = 1;
-    const jsonData = new JsonData(productId,'', estatus, '1','', secuenciaId, 1);
+    const jsonData = new JsonData(productId,'', estatus, '1', '', secuenciaId, 1);
     const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
-    const jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
+    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity,
       this.login.token).subscribe(
       (resultado: any) => {
-        
+        console.log('actualizarDatosActivity');
+        console.log(resultado);
       });
   }
 }

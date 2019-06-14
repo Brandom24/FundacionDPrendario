@@ -10,6 +10,7 @@ import { FirmaAutografaPage } from './firma-autografa.page';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { ConsultaBuroService } from './consulta-buro-service';
 
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 const routes: Routes = [
   {
@@ -21,11 +22,11 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule, SignaturePadModule,
-    FormsModule,
+    FormsModule, PdfViewerModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
   declarations: [FirmaAutografaPage],
-  providers:[ConsultaBuroService]
+  providers: [ConsultaBuroService]
 })
 export class FirmaAutografaPageModule {}

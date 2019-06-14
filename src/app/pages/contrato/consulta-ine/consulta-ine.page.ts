@@ -14,6 +14,7 @@ import { DataFile } from 'src/app/services/documentos/model/data-file.model';
 import { JsonRequest } from 'src/app/services/documentos/model/jsonRequest.model';
 import { Imagen } from 'src/app/herramientas/imagen';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-consulta-ine',
@@ -36,6 +37,7 @@ export class ConsultaInePage implements OnInit {
     private documentosService: DocumentosService,
     private oauth: OauthService,
     private login: LoginService,
+    private loading: LoadingService,
     private activityService: ActivitiesService,
     private saveS: GuardarStorageService,
     public camera: Camera) { 
@@ -165,11 +167,12 @@ goCargarDocumento() {
 }
 
 cargarDocumento(fileAnverso: any, bearerToken: string) {
+  this.loading.present('Cargando...');
   this.actualizarActivity('EN PROCESO');
     this.esCargando = true;
     const date = new Date();
     const dataFile1 = new DataFile(
-      'bid:Anverso', 'Nombre', 'Primer apellido', 'Segundo apellido','123549', date.toISOString(), 'RES_BURO', '123123');
+      'bid:Anverso', 'Nombre', 'Primer apellido', 'Segundo apellido', '123549', date.toISOString(), 'RES_BURO', '123123');
     const jsonRequest = new JsonRequest('IDOFA',this.saveS.getOperationID(), 'OK', '', '');
     this.documentosService.cargarDocumento(jsonRequest, dataFile1, fileAnverso, bearerToken).subscribe(
     (respuesta: any) => {
@@ -177,14 +180,17 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
       if (respuesta['resultOK']) {
         this.actualizarActivity('FINALIZADO');
         this.esCargando = false;
+        this.loading.dismiss();
         // alert('Archivo guardado con éxito');
         this.navCtrl.navigateRoot('info-grales');
       } else {
         // alert(respuesta['message']);
+        this.loading.dismiss();
         this.esCargando = false;
       }
     },
     (err: HttpErrorResponse) => {
+      this.loading.dismiss();
       console.log(err);
       // alert('Hubo un error al enviar los datos, intenta de nuevo');
     });
@@ -192,7 +198,7 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
 
   actualizarActivity(estatus: string) {
     const productId = 1;
-    const jsonData = new JsonData( productId,'', estatus,'1', '', this.secuenciaId, 1, this.saveS.getPersonId());
+    const jsonData = new JsonData( productId, '', estatus, '1', '', this.secuenciaId, 1, this.saveS.getPersonId());
     const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
     const jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity,

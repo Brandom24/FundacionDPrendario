@@ -60,18 +60,14 @@ export class IdentificacionOficialPage implements OnInit {
     private saveS: GuardarStorageService,
     public camera: Camera,
   ) {
-    
     this.operationId = this.saveS.getOperationID();
-    let tipoId = this.saveS.getTipoFlujo()
+    const tipoId = this.saveS.getTipoFlujo();
     this.secuenciaId = 0;
-    if(tipoId == "alhajas")
-    {
+    if (tipoId === 'alhajas') {
       this.secuenciaId = 1;
       this.secuenciaOcr = 2;
-    }
-    else
-    {
-      this.secuenciaId = 6
+    } else {
+      this.secuenciaId = 6;
       this.secuenciaOcr = 7;
     }
 
@@ -287,11 +283,15 @@ export class IdentificacionOficialPage implements OnInit {
       const productId = 1;
       const jsonData = new JsonData(productId,'', estatus, '1','', secuenciaId, 1);
       const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
-      const jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, +this.operationId);
+      const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, +this.operationId);
       this.activityService.actualizarDatosActivity(jsonDatosActivity,
         this.login.token).subscribe(
         (resultado: any) => {
-          
+          console.log('actualizarDatosActivity');
+          console.log(resultado);
+        }, (error: HttpErrorResponse) => {
+          console.log('HttpErrorResponse actualizarActivity');
+          console.log(error);
         });
     }
 

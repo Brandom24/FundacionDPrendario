@@ -7,6 +7,9 @@ import { JsonMetadata } from 'src/app/services/actividades/model/json-metadata.m
 import { JsonDatosActivity } from 'src/app/services/actividades/model/json-datos-activity.model';
 import { ActivitiesService } from 'src/app/services/actividades/activities-service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { JsonPersonalData } from 'src/app/services/actividades/model/json-personal-data.model';
+import { JsonInnerData } from 'src/app/services/actividades/model/json-inner-data.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 declare var FingersBidEnrollment: any;
 
@@ -34,9 +37,9 @@ export class MenuPrincipalPage implements OnInit {
   iniciarFlujo(flujo: string) {
     this.saveS.setTipoFlujo(flujo);
     // lla huellas, consultar y tomar desicion
-    // this.fingerVerify();
+    this.fingerVerify();
     this.crearDatosActivity();
-    this.navCtrl.navigateRoot('tipo-identificacion');
+    // this.navCtrl.navigateRoot('tipo-identificacion');
   }
 
   crearDatosActivity() {
@@ -53,15 +56,65 @@ export class MenuPrincipalPage implements OnInit {
     const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, 0);
     this.activityService.crearDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
       (response: any) => {
+        console.log('crearDatosActivity');
+        console.log(response);
       if (response.code === -9999) {
-        const operationId = response.data.operationId;
-        this.saveS.setOperationID(operationId);
+
+        // const operationId = response.data.operationId;
+        this.saveS.setOperationID(response.data.operationId);
+        // systemCode
+        // const systemCode = response.data.systemCode;
+        this.saveS.setSystemCode(response.data.systemCode);
+        this.actualizarDatosActivity();
         // this.navCtrl.navigateRoot('tipo-identificacion');
       }
       }, (err) => {
         console.log(err);
       }
     );
+  }
+
+  actualizarDatosActivity() {
+    const jsonPersonalData =
+    new JsonPersonalData(0, this.saveS.getSystemCode(),
+    'PENDIENTE',
+    'PENDIENTE',
+    'PENDIENTE',
+    'M',
+    '2019-06-07',
+    'es',
+    '',
+    'PENDIENTE', '', '1', '', 'PENDIENTE',
+    'PENDIENTE', 'PENDIENTE', [], '', []);
+
+    const jsonInnerData = new JsonInnerData(jsonPersonalData);
+    const jsonInnerDataString = JSON.stringify(jsonInnerData);
+    const jsonData = new JsonData(1, '', 'PENDIENTE', '1', jsonInnerDataString, 12, 1, 0);
+    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
+    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
+    this.activityService.actualizarDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
+      (resultado: any) => {
+        console.log('actualizarDatosActivity');
+        console.log(resultado);
+        if (resultado['code'] === -9999) {
+          // get personId
+          this.saveS.setPersonId(resultado.data.personId);
+          /* let resumenDocto = new ResumenDoctos("document","CFE","Comprobante domicilio","");
+          if(this.saveS.getResumenDoctos() != null) {
+            this.saveS.getResumenDoctos().push(resumenDocto);
+            // this.goFirmaContrato();
+          } else {
+            this.saveS.setResumenDoctos([]);
+            this.saveS.getResumenDoctos().push(resumenDocto);
+          } */
+        } else {
+          alert('Error al guardar la información, intentar de nuevo');
+        }
+      },
+      (err: HttpErrorResponse) => {
+        console.log('HttpErrorResponse');
+        console.log(err);
+      });
   }
 
   fingerVerify() {

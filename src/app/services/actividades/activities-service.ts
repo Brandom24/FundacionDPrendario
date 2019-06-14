@@ -49,14 +49,14 @@ export class ActivitiesService {
   }
 
   actualizarDatosActivity(jsonDatosActivity: JsonDatosActivity, bearerToken: string): Observable<any> {
-    let headers = {
+    const headers = {
         headers: new HttpHeaders({
-          'Content-type':'application/json',
-          'Authorization':'Bearer '+bearerToken
+          'Content-type': 'application/json',
+          'Authorization': 'Bearer ' + bearerToken
           }),
         };
-    let body = JSON.stringify(jsonDatosActivity);
-    return this.http.put<any>(this.endpoint+'/bid/rest/v1/operations',body,headers).pipe(map(this.extractData));
+    const body = JSON.stringify(jsonDatosActivity);
+    return this.http.put<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
 }
 
     private extractData(res: Response) {

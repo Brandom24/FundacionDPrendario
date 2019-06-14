@@ -15,6 +15,7 @@ import { JsonMetadata } from 'src/app/services/actividades/model/json-metadata.m
 import { JsonDatosActivity } from 'src/app/services/actividades/model/json-datos-activity.model';
 import { ResumenDoctos } from '../../firma-contrato/model/resumen-doctos.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-consulta-buro',
@@ -37,6 +38,7 @@ export class ConsultaBuroPage implements OnInit {
     private documentosService: DocumentosService,
     private oauth: OauthService,
     private login: LoginService,
+    private loading: LoadingService,
     private activityService: ActivitiesService,
     private saveS: GuardarStorageService,
     public camera: Camera) { 
@@ -143,7 +145,7 @@ goCargarDocumento() {
 }
 
 cargarDocumento(fileAnverso: any, bearerToken: string) {
-  
+    this.loading.present('Cargando...');
     this.esCargando = true;
     const date = new Date();
     const dataFile1 = new DataFile(
@@ -164,14 +166,17 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
           console.log('cargarDocumento respuesta',respuesta);
           if (respuesta['resultOK']) {
             this.actualizarActivity('FINALIZADO');
-            alert('Archivo guardado con éxito');
+            //alert('Archivo guardado con éxito');
+            this.loading.dismiss();
             this.navCtrl.navigateRoot('firma-contrato');
           } else {
+            this.loading.dismiss();
             alert(respuesta['message']);
             this.esCargando = false;
           }
         },
         (err: HttpErrorResponse) => {
+          this.loading.dismiss();
           console.log(err);
           alert('Hubo un error al enviar los datos, intenta de nuevo');
         });

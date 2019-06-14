@@ -220,14 +220,14 @@ export class LoginService {
 
                   case -9999:
                       this.loading.dismiss();
-                    alert('Este usuario Ya esta registrado : ' + JSON.stringify(data));
-                    this.navCtrl.navigateRoot('login');
+                    alert('Este usuario Ya esta registrado : ');
+                    // this.navCtrl.navigateRoot('verificacion');
                       break;
 
                      //-9401
                   case -9401:
                     this.loading.dismiss();
-                      alert('Este usuario NO esta registrado');
+                      // alert('Este usuario NO esta registrado');
                       this.navCtrl.navigateRoot('tipo-identificacion');
                       break;
 
@@ -295,28 +295,28 @@ export class LoginService {
                 switch (data['code']) {
                   case -9601:
                       this.loading.dismiss();
-                    console.log('Usuario NO encontrado');
-                    this.navCtrl.navigateRoot('consulta-buro');
+                    console.log('Cliente NO encontrado');
+                    // this.navCtrl.navigateRoot('consulta-buro');
                     // this.navCtrl.navigateRoot('login');
                     break;
 
                   case -9999:
                       this.loading.dismiss();
-                      console.log('Este usuario Ya esta registrado : ' + JSON.stringify(data));
-                    this.navCtrl.navigateRoot('consulta-buro');
+                      console.log('Este cliente Ya esta registrado : ' + JSON.stringify(data));
+                    // this.navCtrl.navigateRoot('consulta-buro');
                       break;
 
                   //-9401
                   case -9401:
                       this.loading.dismiss();
-                      console.log('Usuario NO encontrado');
-                    this.navCtrl.navigateRoot('consulta-buro');
+                      console.log('Cliente NO encontrado');
+                    // this.navCtrl.navigateRoot('consulta-buro');
                     // this.navCtrl.navigateRoot('login');
                     break;
 
                   default:
                     console.log('Este usuario NO esta registrado : ' + JSON.stringify(data));
-                    this.navCtrl.navigateRoot('tipo-identificacion');
+                    // this.navCtrl.navigateRoot('tipo-identificacion');
                     break;
                 }
                 this.loading.dismiss();

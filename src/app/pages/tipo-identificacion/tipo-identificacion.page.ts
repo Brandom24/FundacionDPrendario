@@ -37,14 +37,13 @@ export class TipoIdentificacionPage implements OnInit {
   }
 
   onIdentificacionOficial() {
-    this.guardarS.setTipoIdentificacion("INE");
-    
+    this.guardarS.setTipoIdentificacion('INE');
     this.navCtrl.navigateRoot('identificacion-oficial');
   }
 
   onIdentificacionPasaporte() {
     this.dataClient.typePaspport = true;
-    this.guardarS.setTipoIdentificacion("PASAPORTE");
+    this.guardarS.setTipoIdentificacion('PASAPORTE');
     this.navCtrl.navigateRoot('identificacion-pasaporte');
   }
 

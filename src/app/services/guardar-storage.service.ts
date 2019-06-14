@@ -34,6 +34,7 @@ export class GuardarStorageService {
   private cliente: Cliente;
   private resumenDoctos: ResumenDoctos[];
   private resBuro: string;
+  systemCode: any;
 
 
     public getResBuro(): string {
@@ -94,19 +95,16 @@ public setIneReverso(ineReverso: any): void {
         this.tipoIdentificacion = tipoIdentificacion;
     }
 
-
-
-  
   public getPersonId(): number {
     return this.personId;
-}
+  }
 
-public setPersonId(personId: number): void {
-    this.personId = personId;
-}
-  public getJsonDatosActivity(): JsonDatosActivity {
-    return this.jsonDatosActivity;
-}
+  public setPersonId(personId: number): void {
+      this.personId = personId;
+  }
+    public getJsonDatosActivity(): JsonDatosActivity {
+      return this.jsonDatosActivity;
+  }
 
 public setJsonDatosActivity(jsonDatosActivity: JsonDatosActivity): void {
     this.jsonDatosActivity = jsonDatosActivity;
@@ -151,6 +149,14 @@ public setJsonDatosActivity(jsonDatosActivity: JsonDatosActivity): void {
 
   getOperationID() {
     return this.operationID;
+  }
+
+  setSystemCode(systemCode: any) {
+    this.systemCode = systemCode;
+  }
+
+  getSystemCode() {
+    return this.systemCode;
   }
 
   setAnversoIdContrato(anversoIdContrato: any) {

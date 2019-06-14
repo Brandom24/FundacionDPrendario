@@ -55,6 +55,8 @@ export class FirmaAutografaPage implements OnInit {
   autografa: boolean;
   digital: boolean;
   jsonData: JsonDataContrato;
+  documentPDF: any;
+  fag: boolean;
   constructor(
     private loading: LoadingService,
     private alertCtrl: AlertController,
@@ -65,10 +67,11 @@ export class FirmaAutografaPage implements OnInit {
     private consultaBuroService: ConsultaBuroService,
     private saveS: GuardarStorageService,
     private platform: Platform,
-  ) { 
+  ) {
     this.cliente = this.saveS.getCliente();
     this.autografa = false;
     this.digital = false;
+    this.fag = false;
   }
 
   public signaturePadOptions: Object = {
@@ -125,8 +128,9 @@ export class FirmaAutografaPage implements OnInit {
   // }
 
   finalizar() {
-    this.loginService.finalizar();
-  }
+    // this.loginService.finalizar();
+    this.navCtrl.navigateRoot('consulta-buro');
+    }
 
   repetirContrato() {
     this.pdfContrato = null;
@@ -153,7 +157,7 @@ export class FirmaAutografaPage implements OnInit {
                 if (this.autografa === true && this.digital === false) {
                   this.enviar();
                 }
-                if (this.digital === true && this.autografa === false){
+                if (this.digital === true && this.autografa === false) {
                   this.enviarDigital(jsonFingerPrintsString);
                 }
               } else {
@@ -178,10 +182,12 @@ export class FirmaAutografaPage implements OnInit {
     this.loading.present('Cargando...');
     if (jsonFingerPrintsString) {
       this.esCargando = true;
-      this.cliente = new Cliente();
-      let campos: JsonCamposContrato[] = []
-      console.log(this.cliente)
-      let nombre = this.cliente.getNombre+" "+this.cliente.getPaterno()+" "+this.cliente.getMaterno();
+      // this.cliente = new Cliente();
+      this.cliente = this.saveS.getCliente();
+      let campos: JsonCamposContrato[] = [];
+      console.log('enviarDigital this.cliente');
+      console.log(this.cliente);
+      let nombre = this.cliente.getNombre + ' ' + this.cliente.getPaterno()+" "+this.cliente.getMaterno();
       let jsonCamposNombre = new JsonCamposContrato(1,"nombreSolicitante");
       campos.push(jsonCamposNombre);
       let jsonCamposRfc = new JsonCamposContrato(1,"RFC",this.cliente.getRfc());
@@ -242,9 +248,9 @@ export class FirmaAutografaPage implements OnInit {
               {
                 console.log(response)
                 this.actualizarActivity("FINALIZADO");
-                this.saveS.setResBuro(idTasFirma)
-                this.pdfContrato =atob(response['data']);
-                this.navCtrl.navigateRoot('consulta-buro');
+                this.saveS.setResBuro(idTasFirma);
+                this.pdfContrato = 'data:application/pdf;base64,' + response['data'];
+                // this.navCtrl.navigateRoot('consulta-buro');
                 this.loading.dismiss();
                 // getPdf(this.pdfContrato);
               }
@@ -296,35 +302,37 @@ export class FirmaAutografaPage implements OnInit {
     this.loading.present('Cargando...');
     if (this.firma) {
       this.esCargando = true;
-      this.cliente = new Cliente();
+      // this.cliente = new Cliente();
+      this.cliente = this.saveS.getCliente();
+      console.log('this.cliente');
+      console.log(this.cliente);
       let campos: JsonCamposContrato[] = []
-      console.log(this.cliente)
       let nombre = this.cliente.getNombre+" "+this.cliente.getPaterno()+" "+this.cliente.getMaterno();
-      let jsonCamposNombre = new JsonCamposContrato(1,"nombreSolicitante");
+      let jsonCamposNombre = new JsonCamposContrato(1,"nombreSolicitante", this.cliente.getNombre());
       campos.push(jsonCamposNombre);
       let jsonCamposRfc = new JsonCamposContrato(1,"RFC",this.cliente.getRfc());
       campos.push(jsonCamposRfc);
-      let jsonCamposDomicilio = new JsonCamposContrato(1,"domicilio",this.cliente.getCalle());
+      let jsonCamposDomicilio = new JsonCamposContrato(1,"domicilio", this.cliente.getCalle());
       campos.push(jsonCamposDomicilio);
-      let jsonCamposColonia = new JsonCamposContrato(1,"colonia",this.cliente.getColonia());
+      let jsonCamposColonia = new JsonCamposContrato(1,"colonia", this.cliente.getColonia());
       campos.push(jsonCamposColonia);
-      let jsonCamposMunicipio = new JsonCamposContrato(1,"municipio","1");
+      let jsonCamposMunicipio = new JsonCamposContrato(1,"municipio", this.cliente.getCiudad().toString());
       campos.push(jsonCamposMunicipio);
-      let jsonCamposEstado = new JsonCamposContrato(1,"estado","1");
+      let jsonCamposEstado = new JsonCamposContrato(1,"estado", this.cliente.getEstado().toString());
       campos.push(jsonCamposEstado);
-      let jsonCamposCodigoPostal = new JsonCamposContrato(1,"codigoPostal",this.cliente.getCodigoPostal()?this.cliente.getCodigoPostal().toString():"");
+      let jsonCamposCodigoPostal = new JsonCamposContrato(1,"codigoPostal", this.cliente.getCodigoPostal());
       campos.push(jsonCamposCodigoPostal);
       let celular = "";    
       if(this.cliente.getPhones() && this.cliente.getPhones().length > 0)
       {
         celular = this.cliente.getPhones()[0].number;
       }
-      let jsonCamposTelefonos = new JsonCamposContrato(1,"telefonos",celular);
+      let jsonCamposTelefonos = new JsonCamposContrato(1,"telefonos", celular);
       campos.push(jsonCamposTelefonos);
       this.estampaTiempo = (this.date.toLocaleDateString('es-MX', this.options)).toUpperCase();
       let jsonCamposFechaFirma = new JsonCamposContrato(1,"fechaFirma",this.estampaTiempo);
       campos.push(jsonCamposFechaFirma);
-      let jsonCamposNombreFirma = new JsonCamposContrato(1,"nombreFirma",nombre);
+      let jsonCamposNombreFirma = new JsonCamposContrato(1,"nombreFirma", nombre);
       campos.push(jsonCamposNombreFirma);
       let jsonCamposFechaConsulta = new JsonCamposContrato(1,"fechaConsulta",this.estampaTiempo);
       campos.push(jsonCamposFechaConsulta);
@@ -364,8 +372,9 @@ export class FirmaAutografaPage implements OnInit {
                 console.log(response)
                 this.actualizarActivity("FINALIZADO");
                 this.saveS.setResBuro(idTasFirma)
-                this.pdfContrato =atob(response['data']);
-                this.navCtrl.navigateRoot('consulta-buro');
+                // this.pdfContrato = atob(response['data']);
+                this.pdfContrato = 'data:application/pdf;base64,' + response['data'];
+                // this.navCtrl.navigateRoot('consulta-buro');
                 this.loading.dismiss();
                 // getPdf(this.pdfContrato);
               }

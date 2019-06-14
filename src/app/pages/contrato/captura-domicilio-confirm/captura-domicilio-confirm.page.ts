@@ -78,21 +78,29 @@ export class CapturaDomicilioConfirmPage implements OnInit {
 
    guardarDatos()
   {
-    const jsonPersonalData = new JsonPersonalData(0,"", this.cliente.getPaterno(),
-    this.cliente.getNombre(),this.cliente.getMaterno(),
-    this.cliente.getSexo(),this.cliente.getNacimiento(),"es","",
+    const jsonPersonalData =
+    new JsonPersonalData(0, '',
+    this.cliente.getPaterno(),
+    this.cliente.getNombre(),
+    this.cliente.getMaterno(),
+    this.cliente.getSexo(),
+    this.cliente.getNacimiento(),
+    "es",
+    "",
     this.cliente.getPaisDeNacimiento(),"","1","",this.cliente.getOcr(), 
     this.cliente.getRfc(),this.cliente.getCurp(),[],"",this.cliente.getPhones());
-    let jsonInnerData = new JsonInnerData(jsonPersonalData);
-    let jsonInnerDataString = JSON.stringify(jsonInnerData);
-    let jsonData = new JsonData(1, "","FINALIZADO","1",jsonInnerDataString,12,1,0);
-    let jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
-    let jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
+
+    const jsonInnerData = new JsonInnerData(jsonPersonalData);
+    const jsonInnerDataString = JSON.stringify(jsonInnerData);
+    const jsonData = new JsonData(1, "","FINALIZADO","1",jsonInnerDataString,12,1,0);
+    const jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
+    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
       (resultado: any) => {
         if(resultado["code"] == -9999)
         {
-          console.log(resultado);
+          console.log('actualizarDatosActivity');
+          console.log(resultado); 
           let resumenDocto = new ResumenDoctos("document","CFE","Comprobante domicilio","");
           if(this.saveS.getResumenDoctos() != null)
           {

@@ -25,9 +25,12 @@ const routes: Routes = [
 // tslint:disable-next-line: max-line-length
   { path: 'captura-domicilio-confirm', loadChildren: './pages/contrato/captura-domicilio-confirm/captura-domicilio-confirm.module#CapturaDomicilioConfirmPageModule' },
   { path: 'consulta-ine', loadChildren: './pages/contrato/consulta-ine/consulta-ine.module#ConsultaInePageModule' },
+// tslint:disable-next-line: max-line-length
   { path: 'identificacion-pasaporte', loadChildren: './pages/tipo-identificacion/identificacion-pasaporte/identificacion-pasaporte.module#IdentificacionPasaportePageModule' },
   { path: 'info-grales', loadChildren: './pages/info-grales/info-grales.module#InfoGralesPageModule' },
-  { path: 'consulta-buro', loadChildren: './pages/contrato/firma-autografa/consulta-buro/consulta-buro.module#ConsultaBuroPageModule' }
+  { path: 'consulta-buro', loadChildren: './pages/contrato/firma-autografa/consulta-buro/consulta-buro.module#ConsultaBuroPageModule' },
+  { path: 'verificacion', loadChildren: './pages/menu-principal/verificacion/verificacion.module#VerificacionPageModule' },
+  { path: 'verify', loadChildren: './pages/verify/verify.module#VerifyPageModule' }
 ];
 
 @NgModule({

@@ -1,19 +1,39 @@
 <ion-header>
-        <ion-toolbar color="primary">
-            <ion-buttons slot="start">
-                <ion-menu-button></ion-menu-button>
-              </ion-buttons>
-            <div slot="end">
-                <img src="../../../assets/img/mini-logoTrans_letra_Blanca.png" class="style_logo_header">
-            </div>
-        </ion-toolbar>
-    </ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+        <div slot="end">
+            <img src="../../../assets/img/mini-logoTrans_letra_Blanca.png" class="style_logo_header">
+        </div>
+    </ion-toolbar>
+</ion-header>
 
 <ion-content>
-        <div *ngIf="documentPDF">
+<div>
+    <br>
+    <ion-row justify-content-center align-items-center>
+        <ion-col justify-content-center align-items-center>
+            <div class="" text-center>Seleccione la opción deseada:</div>
+        </ion-col>
+        <ion-item-divider></ion-item-divider>
+    </ion-row>
+</div>
+
+        <div *ngIf="pdfContrato">
+    <pdf-viewer [src]="pdfContrato" 
+                [render-text]="true"
+                [original-size]="true"
+                [fit-to-page]="true"
+                [autoresize]="true"></pdf-viewer>
+                <!-- style="display: block;" -->
+    
         </div>
-    <div *ngIf="!documentPDF">
-    <ion-label text-center><h1>¿Autorizas consulta a buró de crédito?</h1></ion-label>
+    <div *ngIf="!pdfContrato">
+<!--     <ion-label text-center><h1>¿Autorizas consulta a buró de crédito?</h1></ion-label>
+
+    <h2>Seleccione la opción deseada:</h2>
+ -->
     <ion-grid>
         <ion-row>
             <ion-col size="6">
@@ -38,7 +58,7 @@
     <ion-grid *ngIf="autografa">
         <ion-row>
             <ion-col class="style_pad">
-                <signature-pad [options]="signaturePadOptions" (onEndEvent)="drawComplete()" minlength="480px"></signature-pad>
+                <signature-pad [options]="signaturePadOptions" (onEndEvent)="drawComplete()"></signature-pad>
             </ion-col>
         </ion-row>
         <ion-row>
@@ -54,12 +74,12 @@
 </ion-content>
 <ion-footer>
     <ion-toolbar>
-        <!--  [disabled]="!isenabled || !isenabled2"  -->
-        <ion-button *ngIf="!esConsultar" color="primary" class="" expand="block" (click)="enviar()">
+        <!--  [disabled]="!isenabled || !isenabled2"  *ngIf="pdfContrato"-->
+        <ion-button [disabled]="fag" *ngIf="!pdfContrato" color="primary" class="" expand="block" (click)="enviar()">
             <ion-ripple-effect></ion-ripple-effect>
             CONTINUAR
         </ion-button>
-        <ion-button *ngIf="esConsultar" color="primary" expand="block" (click)="finalizar()">
+        <ion-button *ngIf="pdfContrato" color="primary" expand="block" (click)="finalizar()">
             <ion-ripple-effect></ion-ripple-effect>
             FINALIZAR
         </ion-button>

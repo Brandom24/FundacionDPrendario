@@ -1,6 +1,6 @@
 import { JsonInnerData } from './json-inner-data.model';
 
-export class JsonData{
+export class JsonData {
     constructor(
         public productId: number,
         public code?: string,
@@ -10,7 +10,5 @@ export class JsonData{
         public secuence?: number,
         public workflowId?: number,
         public personId?: number
-        
-
-    ){}
+    ) {}
 }

@@ -102,7 +102,7 @@ export class CapturaDomicilioPage implements OnInit {
   extraerDatosDomicilio() {
     this.loading.present('Verificando datos..');
     if(this.frontImg) {
-    this.actualizarActivity("EN PROCESO",11);
+    this.actualizarActivity("EN PROCESO", 11);
     this.esDatosObtenidos = false;
     this.imagen = new Imagen();
     this.blobComprobante = this.imagen.convertirImagenEnBlob(this.frontImg);
@@ -141,12 +141,13 @@ export class CapturaDomicilioPage implements OnInit {
         this.loading.dismiss();
         console.log('Ocurrió un error en la extracción');
         console.log(err);
+        alert('Por el momento no es posible extraer la información, intenta de nuevo');
+        this.extraerDatosDomicilio();
       });
     } else {
       this.loading.dismiss();
       this.alerta();
     }
-    
   }
 
   async alerta() {
@@ -169,12 +170,14 @@ export class CapturaDomicilioPage implements OnInit {
   
   actualizarActivity(estatus: string, secuenciaId:number) {
     const productId = 1;
-    const jsonData = new JsonData( productId,'', estatus,'1', '', secuenciaId, 1, this.saveS.getPersonId());
+    const jsonData = new JsonData( productId,'', estatus, '1', '', secuenciaId, 1, this.saveS.getPersonId());
     const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
-    const jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
+    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity,
       this.login.token).subscribe(
       (resultado: any) => {
+        console.log('actualizarDatosActivity');
+        console.log(resultado); 
       });
   }
 }

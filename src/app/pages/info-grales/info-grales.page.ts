@@ -18,6 +18,7 @@ import { TelefonosDto } from 'src/app/objetosDTO/telefonos-dto';
 import { ContadorGrales } from './contador-grales';
 import { DataDomicilio } from '../../objetosDTO/data-domicilio';
 import { EmailDto } from '../../objetosDTO/email-dto';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-info-grales',
@@ -58,7 +59,8 @@ export class InfoGralesPage implements OnInit {
     private catalogoService: CatalogoService,
     private guardarS: GuardarStorageService,
     private navCtrl: NavController,
-    private activityService: ActivitiesService
+    private activityService: ActivitiesService,
+    private loading: LoadingService,
     ) 
     { 
       //this.bearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibXMvYWRtaW4iLCJ0a24vZXNwIiwibXMvdXNlciIsIm13L2FkbWluYXBwIiwiYmlkIl0sInVzZXJfbmFtZSI6ImZyZCIsInNjb3BlIjpbInJvbGVfdXNlciJdLCJleHAiOjE1NTk1MzM5MjIsImF1dGhvcml0aWVzIjpbImNhbl91cGRhdGVfdXNlciIsInJvbGVfdXNlciJdLCJqdGkiOiI2NWEzYzljYS0zZjhhLTQ5M2YtOTcxMi1lY2NmOGRiZTRhYzQiLCJjbGllbnRfaWQiOiJ1c2VyYXBwIn0.JXb9-7Uugh-8Nsbh_jywtY06LAZU3V0UfTUgC392Fkw";
@@ -347,6 +349,7 @@ export class InfoGralesPage implements OnInit {
     // this.emails.forEach(element => {
     //   emailConcat += element+"|";
     // });
+    this.loading.present('Cargando...');
     console.log(this.listaTelefonos);
     console.log(this.listaEmail);
     console.log(this.listaDomicilio);
@@ -389,14 +392,19 @@ export class InfoGralesPage implements OnInit {
     this.cliente.setAsociarTel(this.listaTelefonos);
     this.cliente.setAsociarEmail(this.listaEmail);
     this.cliente.setAsociarDomi(this.listaDomicilio);
+    console.log('enviar Info Grales this.cliente');
+    console.log(this.cliente);
+    this.guardarS.setCliente(this.cliente);
+    console.log('this.guardarS.getCliente()');
     console.log(this.guardarS.getCliente());
-    if(this.guardarS.getTipoFlujo() == 'alhajas')
+    if(this.guardarS.getTipoFlujo() == 'alhajas') {
+      this.loading.dismiss();
       this.navCtrl.navigateRoot('firma-contrato');
-    else
+    } else {
+      this.loading.dismiss();
       this.navCtrl.navigateRoot('captura-domicilio');
-
-    
-  } 
+    }
+  }
 
   obtenerDatosCliente(cliente: Cliente){
     alert("Datos guardados");

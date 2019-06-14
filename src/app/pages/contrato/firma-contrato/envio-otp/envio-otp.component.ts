@@ -6,6 +6,7 @@ import { JsonDataOtp } from 'src/app/services/otp/json-data-otp.model';
 import { JsonOtpModel } from 'src/app/services/otp/json-otp.model';
 import { GuardarStorageService } from 'src/app/services/guardar-storage.service';
 import { Cliente } from 'src/app/pages/tipo-identificacion/consulta-similitud-confirmacion/model/Cliente.model';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'envio-otp',
@@ -26,7 +27,8 @@ export class EnvioOtpComponent implements OnInit {
   constructor(    
     private otpService: OtpService,
     private formBuilder: FormBuilder,
-    private saveS: GuardarStorageService
+    private saveS: GuardarStorageService,
+    private loading: LoadingService,
   ) { 
   }
 
@@ -53,6 +55,7 @@ export class EnvioOtpComponent implements OnInit {
 
   enviarSms()
   {
+    this.loading.present('Cargando...');
     let jsonDataOtp = new JsonDataOtp();
     jsonDataOtp.setNumber(this.celular);
     let jsonOtp = new JsonOtpModel(jsonDataOtp,null,+this.operationId);
@@ -60,29 +63,37 @@ export class EnvioOtpComponent implements OnInit {
     this.otpService.enviarSmsOtp(jsonOtp,this.bearerToken).subscribe(
       (respuesta: any) =>{
         if(respuesta["data"]["code"] == 200){
+          this.loading.dismiss();
           // alert("Mensaje enviado exitosamente");
         } else
         {
+          this.loading.dismiss();
           alert("El mensaje no pudo ser enviado, intenta de nuevo");
           this.esEnviarDeNuevo = true;
         }
+      }, () => {
+        this.loading.dismiss();
       });
   }
 
   validarCodigo()
   {
+    this.loading.present('Cargando...');
     let jsonDataOtp = new JsonDataOtp();
     jsonDataOtp.setOtp(this.otpForm.controls.otp.value);
     let jsonOtp = new JsonOtpModel(jsonDataOtp,null,+this.operationId);
     this.otpService.verificarSmsOtp(jsonOtp,this.bearerToken).subscribe(
       (respuesta: any) =>{
-        if(respuesta["data"]["code"] == 200 || this.otpForm.controls.otp.value == "767676")
+        if(respuesta["data"]["code"] == 200 || this.otpForm.controls.otp.value == "767676"){
+          this.loading.dismiss();
           this.esVerificado.emit(true)
-        else
-        {
+        } else {
+          this.loading.dismiss();
           alert("El código ingresado es incorrecto");
           this.esVerificado.emit(false)
         }
+    }, () => {
+      this.loading.dismiss();
     });
   }
 
