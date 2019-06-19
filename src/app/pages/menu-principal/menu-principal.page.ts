@@ -84,7 +84,7 @@ export class MenuPrincipalPage implements OnInit {
     '2019-06-07',
     'es',
     '',
-    'PENDIENTE', '', '1', '', 'PENDIENTE',
+    'PENDIENTE', '', '1', '', '', 'PENDIENTE',
     'PENDIENTE', 'PENDIENTE', [], '', []);
 
     const jsonInnerData = new JsonInnerData(jsonPersonalData);
@@ -129,7 +129,7 @@ export class MenuPrincipalPage implements OnInit {
               if (jsonFingerPrintsString !== '') {
                 this.loading.dismiss();
                 this.login.setFingerVerify(jsonFingerPrintsString);
-                this.login.verifyFinger();
+                this.login.verifyFinger(jsonFingerPrintsString);
               } else {
                 this.loading.dismiss();
                 alert('Tu huellas NO se ha encontrado correctamente');

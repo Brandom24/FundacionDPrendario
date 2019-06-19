@@ -6,6 +6,8 @@ import { LoadingService } from '../services/loading.service';
 import { GuardarStorageService } from './guardar-storage.service';
 import { URL_TOKEN, URL_SERVICIOS } from '../config/url.services';
 import { Observable } from 'rxjs';
+import { Url } from './url';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +23,17 @@ export class LoginService {
   jsonFingerOperID: { 'data': { 'operationId': string, 'fingerPrint': string; }; };
   jsonFinger: { 'data': { 'fingerPrint': string; }; };
   finger: string;
+  url: Url;
+  endpoint: string;
 
   constructor(private http: HttpClient,
               private alertCtrl: AlertController,
               private navCtrl: NavController,
               private loading: LoadingService,
-              private _store: GuardarStorageService) {
+              private _store: GuardarStorageService,
+              ) {
+                this.url = new Url();
+                this.endpoint = this.url.endPoint;
                 this._store.cargarStorage();
                 this.jsonFinger = {
                   'data': {
@@ -107,7 +114,7 @@ export class LoginService {
                 this.loading.dismiss();
 
                 if (this.result) {
-                  this.navCtrl.navigateRoot('menu-principal');
+                  this.navCtrl.navigateRoot('verify');
 
                 } else {
                   const alert = await this.alertCtrl.create({
@@ -189,10 +196,10 @@ export class LoginService {
     this._store.setTipoINE(null);
     this._store.setTipoIdentificacion(null);
     this._store.setResumenDoctos(null);
-    this.navCtrl.navigateRoot('menu-principal');
+    this.navCtrl.navigateRoot('login');
   }
 
-  verifyFinger() {
+  verifyFinger(finger: any) {
     this.loading.present('Verificando datos..');
 
     const headers = new HttpHeaders({
@@ -202,7 +209,7 @@ export class LoginService {
 
     });
 
-    this.jsonFinger.data.fingerPrint = this.finger;
+    this.jsonFinger.data.fingerPrint = finger;
 
     const formData = new FormData();
     formData.append('json', JSON.stringify(this.jsonFinger));
@@ -214,26 +221,28 @@ export class LoginService {
                 // code: -9601
                 switch (data['code']) {
                   case -9601:
-                      this.loading.dismiss();
+                    this.loading.dismiss();
+                    // alert('Este cliente NO esta registrado : ' + JSON.stringify(data));
                     this.navCtrl.navigateRoot('tipo-identificacion');
                     break;
 
                   case -9999:
-                      this.loading.dismiss();
-                    alert('Este usuario Ya esta registrado : ');
-                    // this.navCtrl.navigateRoot('verificacion');
-                      break;
+                    this.loading.dismiss();
+                    // alert('Este cliente Ya esta registrado : ' + JSON.stringify(data));
+                    this._store.setIdentifyFinger(data);
+                    this.navCtrl.navigateRoot('resumen');
+                    break;
 
                      //-9401
                   case -9401:
                     this.loading.dismiss();
-                      // alert('Este usuario NO esta registrado');
-                      this.navCtrl.navigateRoot('tipo-identificacion');
-                      break;
+                    // alert('Este cliente NO esta registrado : ' + JSON.stringify(data));
+                    this.navCtrl.navigateRoot('tipo-identificacion');
+                    break;
 
                   default:
                     this.loading.dismiss();
-                    alert('Este usuario NO esta registrado : ' + JSON.stringify(data));
+                    // alert('registrado : ' + JSON.stringify(data));
                     this.navCtrl.navigateRoot('tipo-identificacion');
                     break;
                 }
@@ -261,7 +270,7 @@ export class LoginService {
                     cssClass: 'secondary',
                     handler: () => {
                       // accion del boton
-                      this.verifyFinger();
+                      this.verifyFinger(finger);
                     }
                   },
                 ]
@@ -315,7 +324,7 @@ export class LoginService {
                     break;
 
                   default:
-                    console.log('Este usuario NO esta registrado : ' + JSON.stringify(data));
+                    console.log('Este cliente NO esta registrado : ' + JSON.stringify(data));
                     // this.navCtrl.navigateRoot('tipo-identificacion');
                     break;
                 }
@@ -361,4 +370,19 @@ export class LoginService {
     return this.finger;
   }
 
+  loginUserFinger(jsonEnroll: any, bearerToken: string): Observable<any> {
+    const formData = new FormData();
+    const body = JSON.stringify(jsonEnroll);
+    console.log('JSON que mando para las huellas', body);
+
+    formData.append('json', body);
+    const headers = {headers: new HttpHeaders().set('Authorization', 'Bearer ' + bearerToken)};
+    return this.http.post<any>(this.endpoint + '/bid/rest/v1/auth/login', formData, headers)
+    .pipe(map(this.extractData));
+  }
+
+  private extractData(res: Response) {
+    const body = res;
+    return body || { };
+  }
 }

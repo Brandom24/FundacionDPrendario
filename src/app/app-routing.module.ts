@@ -29,8 +29,9 @@ const routes: Routes = [
   { path: 'identificacion-pasaporte', loadChildren: './pages/tipo-identificacion/identificacion-pasaporte/identificacion-pasaporte.module#IdentificacionPasaportePageModule' },
   { path: 'info-grales', loadChildren: './pages/info-grales/info-grales.module#InfoGralesPageModule' },
   { path: 'consulta-buro', loadChildren: './pages/contrato/firma-autografa/consulta-buro/consulta-buro.module#ConsultaBuroPageModule' },
-  { path: 'verificacion', loadChildren: './pages/menu-principal/verificacion/verificacion.module#VerificacionPageModule' },
-  { path: 'verify', loadChildren: './pages/verify/verify.module#VerifyPageModule' }
+  { path: 'verify', loadChildren: './pages/verify/verify.module#VerifyPageModule' },
+  { path: 'resumen', loadChildren: './pages/verify/resumen/resumen.module#ResumenPageModule' },
+  { path: 'finalizar', loadChildren: './pages/contrato/finalizar/finalizar.module#FinalizarModule'}
 ];
 
 @NgModule({

@@ -9,7 +9,11 @@
         <ion-card>
             <ion-card-content>
                 <div text-center>
-                    <form>
+                        <ion-input maxlength="15" [(ngModel)]="user" class="datos_input" type="email" name="email" placeholder="Usuario"></ion-input>
+                        <ion-button [disabled]=" user.length < 3" class="boton_style" (click)="startFingersEnrollment()">Capturar huella
+                                <ion-icon slot="end" name="log-in"></ion-icon>
+                            </ion-button>
+                    <!-- <form>
 
                         <ion-input maxlength="15" [(ngModel)]="user" class="datos_input" type="email" name="email" placeholder="Usuario"></ion-input>
                         <ion-input maxlength="15" [(ngModel)]="password" class="datos_input" type="password" name="password" placeholder="Contraseña"></ion-input>
@@ -17,15 +21,17 @@
                         <ion-button [disabled]=" user.length < 3 || password.length < 3" class="boton_style" (click)="verifyUser()">Iniciar sesión
                             <ion-icon slot="end" name="log-in"></ion-icon>
                         </ion-button>
-                    </form>
+                    </form> -->
                 </div>
             </ion-card-content>
         </ion-card>
     </div>
-            <p class="color_font" text-right>
-                        {{estampaTiempo}}
-            </p>
+    <div class="bottom">
+        <p class="color_font" text-right>
+            {{estampaTiempo}}
+        </p>
         <p class="color_font_2" text-right>
             Versión: 1.0.8
         </p>
+    </div>
 </ion-content>

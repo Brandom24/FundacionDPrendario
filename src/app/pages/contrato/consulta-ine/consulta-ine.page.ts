@@ -15,6 +15,11 @@ import { JsonRequest } from 'src/app/services/documentos/model/jsonRequest.model
 import { Imagen } from 'src/app/herramientas/imagen';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { LoadingService } from 'src/app/services/loading.service';
+import { Cliente } from '../../tipo-identificacion/consulta-similitud-confirmacion/model/Cliente.model';
+import { JsonPersonalData } from 'src/app/services/actividades/model/json-personal-data.model';
+import { JsonOperationData } from 'src/app/services/actividades/model/json-operation-data.model';
+import { JsonInnerData } from 'src/app/services/actividades/model/json-inner-data.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-consulta-ine',
@@ -22,6 +27,8 @@ import { LoadingService } from 'src/app/services/loading.service';
   styleUrls: ['./consulta-ine.page.scss'],
 })
 export class ConsultaInePage implements OnInit {
+  cardValid: boolean;
+
   browser: any;
   esCargando: boolean;
   capturasINE: string;
@@ -29,7 +36,13 @@ export class ConsultaInePage implements OnInit {
   isenabled: boolean;
   isValidoSpinnerFront: boolean;
   frontImg2: any;
-  secuenciaId:number;
+  secuenciaId: number;
+
+  client: ClientData;
+
+  pData: JsonPersonalData;
+  validINE: string;
+
   constructor(
     private iab: InAppBrowser,
     private alertCtrl: AlertController,
@@ -40,8 +53,17 @@ export class ConsultaInePage implements OnInit {
     private loading: LoadingService,
     private activityService: ActivitiesService,
     private saveS: GuardarStorageService,
+    private activitiesService: ActivitiesService,
+    private route: ActivatedRoute,
     public camera: Camera) { 
-      
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        this.pData = JSON.parse(params.client);
+        this.pData.observations = this.validINE;
+      }
+    });
+    this.cardValid = true;
+    this.validINE = 'Identificación válida';
     this.secuenciaId = 0;
     if(this.saveS.getTipoFlujo() == "alhajas")
     {
@@ -160,7 +182,12 @@ goCargarDocumento() {
   try {
     const imagen = new Imagen();
     const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
-    this.cargarDocumento(blobAnverso, this.saveS.getBearerToken());
+    console.log('blobAnverso'); console.log(blobAnverso);
+    if (blobAnverso) {
+      this.cargarDocumento(blobAnverso, this.saveS.getBearerToken());
+    } else {
+      alert('Imagen Invalida');
+    }
   } catch (error) {
     console.log(error);
   }
@@ -168,43 +195,133 @@ goCargarDocumento() {
 
 cargarDocumento(fileAnverso: any, bearerToken: string) {
   this.loading.present('Cargando...');
-  this.actualizarActivity('EN PROCESO');
+  // this.actualizarActivity('EN PROCESO');
     this.esCargando = true;
     const date = new Date();
     const dataFile1 = new DataFile(
       'bid:Anverso', 'Nombre', 'Primer apellido', 'Segundo apellido', '123549', date.toISOString(), 'RES_BURO', '123123');
-    const jsonRequest = new JsonRequest('IDOFA',this.saveS.getOperationID(), 'OK', '', '');
+    const jsonRequest = new JsonRequest('IDOFA', this.saveS.getOperationID(), 'OK', '', '');
     this.documentosService.cargarDocumento(jsonRequest, dataFile1, fileAnverso, bearerToken).subscribe(
     (respuesta: any) => {
-      console.log('cargarDocumento respuesta',respuesta);
+      console.log('cargarDocumento respuesta', respuesta);
       if (respuesta['resultOK']) {
-        this.actualizarActivity('FINALIZADO');
+        // this.actualizarActivity('FINALIZADO');
         this.esCargando = false;
         this.loading.dismiss();
         // alert('Archivo guardado con éxito');
-        this.navCtrl.navigateRoot('info-grales');
+        // this.navCtrl.navigateRoot('info-grales');
+        this.guardarDatos(this.pData);
       } else {
         // alert(respuesta['message']);
         this.loading.dismiss();
         this.esCargando = false;
       }
     },
-    (err: HttpErrorResponse) => {
+    (error: HttpErrorResponse) => {
       this.loading.dismiss();
-      console.log(err);
+      console.log(error);
+      switch (error['status']) {
+        case 401:
+          alert('Es necesario iniciar session, nuemente para continuar');
+          this.navCtrl.navigateRoot('login');
+          break;
+
+          case 404:
+          alert('Es necesario iniciar session, nuemente para continuar');
+              this.navCtrl.navigateRoot('login');
+            break;
+
+          case 500:
+          alert('Por favor, reintentar para continuar');
+          this.cargarDocumento(fileAnverso, bearerToken);
+            break;
+
+          case 501:
+          alert('Por favor, reintentar para continuar');
+          this.cargarDocumento(fileAnverso, bearerToken);
+            break;
+        default:
+          alert('Es necesario iniciar session, nuemente para continuar');
+            this.navCtrl.navigateRoot('login');
+          break;
+      }
       // alert('Hubo un error al enviar los datos, intenta de nuevo');
     });
   }
 
   actualizarActivity(estatus: string) {
-    const productId = 1;
-    const jsonData = new JsonData( productId, '', estatus, '1', '', this.secuenciaId, 1, this.saveS.getPersonId());
-    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
-    const jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
-    this.activityService.actualizarDatosActivity(jsonDatosActivity,
+     const productId = 1;
+    const jsonData = new JsonData( productId, this.saveS.getSystemCode(),
+    estatus, '1', '', this.secuenciaId, 1, this.saveS.getPersonId());
+    // {'id': this.saveS.getPersonId(), 'observations': this.validINE.toString()} 
+    console.log('jsonData validINE :');
+    console.log(jsonData);
+    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1); 
+
+    /* const jsonData = {
+      'data': {
+        'productId': 1,
+        'code': '',
+        'activityStatus': 'FINALIZADO',
+        'activityValue': null,
+        'data': '{"personal_data":{"id":' + this.saveS.getPersonId() + ',"observations":"' + this.validINE + '}}',
+        'secuence': 17,
+        'workflowId': 1,
+        'personId': this.saveS.getPersonId()
+      },
+      'metadata': {
+        'accuracy': 0,
+        'deviceInfo': '',
+        'latutide': 0,
+        'longitude': 0,
+        'timeZoneId': 1,
+        'userId': this.saveS.getResultLogin()
+      },
+      'operationId': this.saveS.getOperationID()
+    }; */
+     const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
+    // jsonDatosActivity
+    this.activityService.actualizarDatosActivityINE(jsonDatosActivity,
       this.login.token).subscribe(
       (resultado: any) => {
       });
+  }
+  guardarDatos(json: JsonPersonalData) {
+    // tslint:disable-next-line: max-line-length
+    let jsonPersonalData = json;
+    this.pData = jsonPersonalData;
+    let operationData = new JsonOperationData("bid");
+    let jsonInnerData = new JsonInnerData(jsonPersonalData);
+    let jsonInnerDataString = JSON.stringify(jsonInnerData);
+    let jsonData = new JsonData(1, "","FINALIZADO","2",jsonInnerDataString,this.secuenciaId,1,0);
+    let jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
+    let jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
+    this.saveS.setJsonDatosActivity(jsonDatosActivity);
+    this.activitiesService.actualizarDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
+    (resultado: any) => {
+      console.log(resultado);
+      if(resultado.code == -9999)
+      {
+        this.navCtrl.navigateRoot('finalizar');
+      } else {
+        alert('Error al Guardar los datos');
+      }
+    },
+    (err: HttpErrorResponse) => {
+      console.log(err);
+    });
+  }
+
+  logout() {
+    this.login.finalizar();
+  }
+
+  isValidoChange(event) {
+    if (this.cardValid === true) {
+      this.validINE = 'Identificación válida';
+    } else {
+      this.validINE = 'Identificación no válida';
+    }
   }
 
 }

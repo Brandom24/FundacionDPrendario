@@ -168,9 +168,12 @@ export class CapturaDomicilioPage implements OnInit {
     await alert.present();
   }
   
-  actualizarActivity(estatus: string, secuenciaId:number) {
+  actualizarActivity(estatus: string, secuenciaId: number) {
     const productId = 1;
-    const jsonData = new JsonData( productId,'', estatus, '1', '', secuenciaId, 1, this.saveS.getPersonId());
+    const jsonData = new JsonData( productId,
+      this.saveS.getSystemCode(),
+      estatus, '1', '',
+      secuenciaId, 1, this.saveS.getPersonId());
     const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
     const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity,

@@ -20,7 +20,7 @@ import { OauthService } from './services/oauth.service';
 import { ActivitiesService } from './services/actividades/activities-service';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-
+/* {hardwareBackButton: false} */
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

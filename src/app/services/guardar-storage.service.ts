@@ -35,6 +35,8 @@ export class GuardarStorageService {
   private resumenDoctos: ResumenDoctos[];
   private resBuro: string;
   systemCode: any;
+  identifyFinger: any;
+  resultLogin: any;
 
 
     public getResBuro(): string {
@@ -125,6 +127,15 @@ public setJsonDatosActivity(jsonDatosActivity: JsonDatosActivity): void {
               private storage: Storage,
               private sqlite: SQLite) { }
 
+  // getDatosDomicilio
+  setIdentifyFinger(identifyFinger: any) {
+    this.identifyFinger = identifyFinger;
+  }
+
+  getIdentifyFinger() {
+    return this.identifyFinger;
+  }
+
    // getDatosDomicilio
    setImagenDomicilio(imagenDomicilio: any) {
     this.imagenDomicilio = imagenDomicilio;
@@ -141,6 +152,14 @@ public setJsonDatosActivity(jsonDatosActivity: JsonDatosActivity): void {
 
   getDatosDomicilio() {
     return this.datosDomicilio;
+  }
+
+  setResultLogin(resultLogin: any) {
+    this.resultLogin = resultLogin;
+  }
+
+  getResultLogin() {
+    return this.resultLogin;
   }
 
   setOperationID(operationID: any) {

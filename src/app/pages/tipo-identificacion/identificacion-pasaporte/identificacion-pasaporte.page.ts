@@ -18,6 +18,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { GuardarStorageService } from 'src/app/services/guardar-storage.service';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ResumenDoctos } from '../../contrato/firma-contrato/model/resumen-doctos.model';
+import { NavigationOptions } from '@ionic/angular/dist/providers/nav-controller';
 
 
 @Component({
@@ -49,6 +50,8 @@ export class IdentificacionPasaportePage implements OnInit {
   secuenciaId: number;
   secuenciaOcr: number;
 
+  document_ext: string;
+
   constructor(
     private alertCtrl: AlertController,
     private navCtrl: NavController,
@@ -61,9 +64,11 @@ export class IdentificacionPasaportePage implements OnInit {
     private documentosService: DocumentosService,
     public camera: Camera,
   ) {
+
+    this.document_ext = 'p';
     this.operationId = this.saveS.getOperationID();
-    this.secuenciaId = 0;
-    if(this.saveS.getTipoFlujo() == "alhajas")
+    this.secuenciaId = 23;
+    /* if(this.saveS.getTipoFlujo() == "alhajas")
     {
       this.secuenciaId = 1;
       this.secuenciaOcr = 2;
@@ -72,9 +77,18 @@ export class IdentificacionPasaportePage implements OnInit {
     {
       this.secuenciaId = 6
       this.secuenciaOcr = 7;
-    } }
+    }  */
+  }
+
+  public restart(): void {
+    this.frontImg = null;
+    this.frontImg2 = null
+    this.backImg = null;
+    this.backImg2 = null;
+  }
 
   ngOnInit() {
+    this.saveS.setDatosOCR('');
     this.anverso = '';
     this.reverso = '';
     this.esAnversoActiva = false;
@@ -82,45 +96,89 @@ export class IdentificacionPasaportePage implements OnInit {
   }
 
   extraerOCR() {
-    
-    const imagen = new Imagen();
-    const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
-    let blobReverso;
-    if (this.backImg) {
-      blobReverso = imagen.convertirImagenEnBlob(this.backImg);
+    let options: NavigationOptions = {};
+    if(this.document_ext === 'p'){
+      const imagen = new Imagen();
+      const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
+      let blobReverso;
+      if (this.backImg) {
+        blobReverso = imagen.convertirImagenEnBlob(this.backImg);
+        if (!blobAnverso) {
+          alert('Imagen Invalida');
+        }
+      }
+
+      this.actualizarActivity('EN PROCESO', this.secuenciaId);
+      this.extraerDatosOcr(this.operationId, blobAnverso, this.login.token , blobReverso);
+      // this.onBiometria();
+      options.queryParams = {
+        origin: 'ext-passport'
+      };
+      this.navCtrl.navigateRoot('consulta-similitud-confirmacion?origin=Extranjero', options);
+      // crearDatosActivity
+      //  try {
+      //    const productId = 1;
+      //    const jsonData = new JsonData(+productId,
+      //      '', 'EN PROCESO', '1', '', 2, 1);
+      //    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
+      //    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, +this.operationId);
+      //    this.activityService.crearDatosActivity(jsonDatosActivity, this.login.token).subscribe(
+      //      (response) => {
+      //        console.log('Response');
+      //        console.log(response);
+      //        console.log('OperationID');
+      //        console.log(response.data.operationId);
+
+      //        this.operationId = JSON.stringify(response.data.operationId);
+      //        this.saveS.setOperationID(this.operationId);
+      //        const imagen = new Imagen();
+      //        const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
+      //        this.extraerDatosOcr(this.operationId, blobAnverso, this.login.token);
+      //        this.onBiometria();
+      //      }, (err) => {
+      //        alert(err);
+      //      }
+      //    );
+      //  } catch (error) {
+      //    alert(error);
+      //  }
+    }else{
+      const imagen = new Imagen();
+      const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
+      let blobReverso = imagen.convertirImagenEnBlob(this.backImg);
+
+      this.actualizarActivity('EN PROCESO', this.secuenciaId);
+      this.extraerDatosOcr(this.operationId, blobAnverso, this.login.token , blobReverso);
+      // this.onBiometria();
+      this.navCtrl.navigateRoot('consulta-similitud-confirmacion?origin=Extranjero', options);
+      // crearDatosActivity
+      //  try {
+      //    const productId = 1;
+      //    const jsonData = new JsonData(+productId,
+      //      '', 'EN PROCESO', '1', '', 2, 1);
+      //    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
+      //    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, +this.operationId);
+      //    this.activityService.crearDatosActivity(jsonDatosActivity, this.login.token).subscribe(
+      //      (response) => {
+      //        console.log('Response');
+      //        console.log(response);
+      //        console.log('OperationID');
+      //        console.log(response.data.operationId);
+
+      //        this.operationId = JSON.stringify(response.data.operationId);
+      //        this.saveS.setOperationID(this.operationId);
+      //        const imagen = new Imagen();
+      //        const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
+      //        this.extraerDatosOcr(this.operationId, blobAnverso, this.login.token);
+      //        this.onBiometria();
+      //      }, (err) => {
+      //        alert(err);
+      //      }
+      //    );
+      //  } catch (error) {
+      //    alert(error);
+      //  }
     }
-    
-    this.actualizarActivity('EN PROCESO', this.secuenciaId);
-    this.extraerDatosOcr(this.operationId, blobAnverso, this.login.token , blobReverso);
-    this.onBiometria();
-    // crearDatosActivity
-    //  try {
-    //    const productId = 1;
-    //    const jsonData = new JsonData(+productId,
-    //      '', 'EN PROCESO', '1', '', 2, 1);
-    //    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
-    //    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, +this.operationId);
-    //    this.activityService.crearDatosActivity(jsonDatosActivity, this.login.token).subscribe(
-    //      (response) => {
-    //        console.log('Response');
-    //        console.log(response);
-    //        console.log('OperationID');
-    //        console.log(response.data.operationId);
-
-    //        this.operationId = JSON.stringify(response.data.operationId);
-    //        this.saveS.setOperationID(this.operationId);
-    //        const imagen = new Imagen();
-    //        const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
-    //        this.extraerDatosOcr(this.operationId, blobAnverso, this.login.token);
-    //        this.onBiometria();
-    //      }, (err) => {
-    //        alert(err);
-    //      }
-    //    );
-    //  } catch (error) {
-    //    alert(error);
-    //  }
-
    }
 
    onBiometria() {
@@ -160,8 +218,8 @@ export class IdentificacionPasaportePage implements OnInit {
   extraerDatosOcr(operationId: number, fileAnverso: any, bearerToken: string, fileReverso?: any) {
     this.esCargando = true;
     // const jsonOcr = new JsonOcr('IDOFA', '8');
-    this.actualizarActivity('FINALIZADO',this.secuenciaId);
-    this.actualizarActivity('EN PROCESO',this.secuenciaOcr);
+    this.actualizarActivity('FINALIZADO', this.secuenciaId);
+    this.actualizarActivity('EN PROCESO', this.secuenciaOcr);
     this.documentosService.extraerDatosOcr2(operationId,
       0, fileAnverso, 'IDOFA', bearerToken,
       fileReverso, 'IDOFB').subscribe(
@@ -173,28 +231,51 @@ export class IdentificacionPasaportePage implements OnInit {
         let doctoAnverso = new ResumenDoctos("document","Pasaporte","Id Oficial",null);
         listaDoctos.push(doctoAnverso);
         this.saveS.setResumenDoctos(listaDoctos);
-        alert('Extracción de información completa');
+        // alert('Extracción de información completa');
       } else {
-        this.actualizarActivity('ERROR',this.secuenciaOcr);
+        this.actualizarActivity('ERROR', this.secuenciaOcr);
         alert(respuesta['message']);
       }
 
       this.esCargando = false;
     },
-    (err: any) => {
+    (error: HttpErrorResponse) => {
       this.esCargando = false;
-      console.log(err);
-      alert('Hubo un error al extraer los datos, intenta de nuevo');
-      this.navCtrl.navigateRoot('login');
+      console.log(error);
+      switch (error['status']) {
+        case 401:
+          alert('Es necesario iniciar session, nuevamente para continuar');
+          this.navCtrl.navigateRoot('login');
+          break;
+
+          case 404:
+          alert('Es necesario iniciar session, nuevamente para continuar');
+              this.navCtrl.navigateRoot('login');
+            break;
+
+          case 500:
+          alert('Por favor, reintentar para continuar');
+          this.extraerOCR();
+            break;
+
+          case 501:
+          alert('Por favor, reintentar para continuar');
+          this.extraerOCR();
+            break;
+        default:
+          alert('Es necesario iniciar session, nuevamente para continuar');
+            this.navCtrl.navigateRoot('login');
+          break;
+      }
     });
   }
 
   actualizarActivity(estatus: string, secuenciaId: number) {
       const code = '';
       const productId = 1;
-      const jsonData = new JsonData( productId,'', estatus,'1', '', secuenciaId, 1, 0);
+      const jsonData = new JsonData( productId, this.saveS.getSystemCode(), estatus,'1', '', secuenciaId, 1, 0);
       const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
-      const jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
+      const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
       this.activityService.actualizarDatosActivity(jsonDatosActivity,
         this.login.token).subscribe(
         (resultado: any) => {
@@ -218,4 +299,53 @@ export class IdentificacionPasaportePage implements OnInit {
       }
     }
 
+    public getImagenBack(): void {
+      this.isValidoSpinnerFront = true;
+      const options: CameraOptions = {
+        quality: 70,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.JPEG,
+        mediaType: this.camera.MediaType.PICTURE,
+        correctOrientation: true
+      };
+
+      this.camera.getPicture(options).then((imageData) => {
+        this.backImg = 'data:image/jpeg;base64,' + imageData;
+        this.backImg2 = imageData;
+        this.saveS.guardarStorageImagenB(this.backImg);
+        if (this.backImg) {
+            // enable the button
+            this.isenabled2 = true;
+            this.isValidoSpinnerFront = false;
+            } else {
+            // disable the button
+            this.isenabled2 = false;
+            this.isValidoSpinnerFront = false;
+            }
+      }, (err) => {
+      // Handle error
+      console.log('Camera issue:' + err);
+      });
+      this.isValidoSpinnerFront = false;
+    }
+
+    changeListenerB($event): void {
+      let mensajeError = '';
+      this.backImg = '';
+      const file: File = $event.target.files[0];
+      if ((file.type !== 'image/jpeg' && file.type !== 'image/png') || (file.size > 1000000)) {
+        mensajeError = 'Formato y/o tamaño de imagen incorrecto';
+      } else {
+        const myReader: FileReader = new FileReader();
+        myReader.onloadend = (e) => {
+          this.backImg  = myReader.result.toString();
+          this.saveS.guardarStorageImagenB(this.backImg);
+        };
+        myReader.readAsDataURL(file);
+      }
+    }
+
+    logout() {
+      this.login.finalizar();
+    }
 }

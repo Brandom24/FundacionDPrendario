@@ -16,12 +16,14 @@ export class JsonPersonalData {
         public email: string,
         public person_type_Id: string,
         public marital_status: string,
+        public observations: string,
         public ocr?: string,
         public rfc?: string,
         public curp?: string,
         public addresses?: JsonAddress[],
         public data?: string,
-        public phone?: Phone[]
+        public phone?: Phone[],
+        public claveElector?: string
     ) {}
 }
 

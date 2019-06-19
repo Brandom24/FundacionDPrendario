@@ -19,6 +19,8 @@ import { JsonInnerData } from 'src/app/services/actividades/model/json-inner-dat
 import { JsonMetadata } from 'src/app/services/actividades/model/json-metadata.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DataClientesService } from '../../../services/data-clientes.service';
+import { NavigationOptions } from '@ionic/angular/dist/providers/nav-controller';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-consulta-similitud-confirmacion',
@@ -26,12 +28,17 @@ import { DataClientesService } from '../../../services/data-clientes.service';
   styleUrls: ['./consulta-similitud-confirmacion.page.scss'],
 })
 export class ConsultaSimilitudConfirmacionPage implements OnInit {
+  origin: string;
+  maxDate: string;
+
   analisis: any; fag: boolean;
   catalogoSexo: CatalogoValuesOut[];
   infoClienteForm: FormGroup;
   cliente: Cliente;
   regex = new Regex();
   secuenciaId: number;
+  fecha: any;
+  fechaCompleta: string;
   constructor(
     private saveS: GuardarStorageService,
     private alertCtrl: AlertController,
@@ -40,18 +47,25 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
     private catalogoService: CatalogoService,
     private login: LoginService,
     private activitiesService: ActivitiesService,
-    private dataClient: DataClientesService
-  ) { 
-    
-    this.secuenciaId = 0;
-    if(this.saveS.getTipoFlujo() == "alhajas")
-    {
+    private dataClient: DataClientesService,
+    private route: ActivatedRoute
+  ) {
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        this.origin = params.origin;
+      }
+    });
+    //console.log(this.navParams.data);
+    const date: Date = new Date();
+// tslint:disable-next-line: max-line-length
+    this.maxDate = (date.getUTCFullYear() - 18) + '-' + (date.getUTCMonth() < 10 ? '0' + date.getUTCMonth(): date.getUTCMonth()) + '-' + (date.getUTCDay() < 10 ? '0' + date.getUTCDay() : date.getUTCDay());
+    console.log(this.maxDate);
+    this.secuenciaId = 24;
+    /* if (this.saveS.getTipoFlujo() === 'alhajas') {
       this.secuenciaId = 2;
-    }
-    else
-    {
+    } else {
       this.secuenciaId = 7;
-    }
+    } */
   }
 
   validation_messages = {
@@ -106,61 +120,114 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
     this.fag = false;
     this.consultarData();
     this.cliente = new Cliente();
-    let catalogoValuesIn = new CatalogoValuesIn("Sexo")
-    this.catalogoService.obtenerElementosCatalogo(catalogoValuesIn,this.login.token).subscribe(
-      (resultado:CatalogoValuesOut[])=>{
+    const catalogoValuesIn = new CatalogoValuesIn('Sexo');
+    this.catalogoService.obtenerElementosCatalogo(catalogoValuesIn, this.login.token).subscribe(
+      (resultado: CatalogoValuesOut[]) => {
         this.catalogoSexo = resultado;
-      }
-    )
+      }, (error: HttpErrorResponse) => {
+        console.log(error);
+        switch (error['status']) {
+          case 401:
+            alert('Es necesario iniciar session, nuevamente para continuar');
+            this.navCtrl.navigateRoot('login');
+            break;
+  
+            case 404:
+            alert('Es necesario iniciar session, nuevamente para continuar');
+                this.navCtrl.navigateRoot('login');
+              break;
+
+            case 500:
+            alert('Por favor, reintentar para continuar');
+            this.ngOnInit();
+              break;
+
+            case 501:
+            alert('Por favor, reintentar para continuar');
+            this.ngOnInit();
+              break;
+          default:
+            alert('Es necesario iniciar session, nuevamente para continuar');
+              this.navCtrl.navigateRoot('login');
+            break;
+        }
+      });
   }
 
   obtenerDatos() {
-    this.cliente.setNombre(this.infoClienteForm.controls.nombre.value);
-    this.cliente.setPaterno(this.infoClienteForm.controls.paterno.value);
-    this.cliente.setMaterno(this.infoClienteForm.controls.materno.value);
-    this.cliente.setAnioRegistro(this.infoClienteForm.controls.anioRegistro.value);
-    this.cliente.setEmision(this.infoClienteForm.controls.emision.value);
-    this.cliente.setClaveElector(this.infoClienteForm.controls.claveElector.value);
-    this.cliente.setCurp(this.infoClienteForm.controls.curp.value);
-    this.cliente.setRfc(this.infoClienteForm.controls.rfc.value);
-    this.cliente.setOcr(this.infoClienteForm.controls.ocr.value);
-    this.cliente.setNacimiento(this.infoClienteForm.controls.nacimiento.value);
-    this.cliente.setSexo( this.infoClienteForm.controls.sexo.value);
-    this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value);
-    let phone = new Phone(0,this.infoClienteForm.controls.telefono.value,"","1","SAVE");
-    this.cliente.setPhones([]);
-    this.cliente.getPhones().push(phone);
-    this.guardarDatos(this.cliente);
+     // if con validaciones
+     if (this.infoClienteForm.controls.nombre.value === ''
+     || this.infoClienteForm.controls.paterno.value === ''
+     || this.infoClienteForm.controls.materno.value === ''
+     || this.infoClienteForm.controls.sexo.value === ''
+     || this.infoClienteForm.controls.nacimiento.value === '' ) {
+      alert('Verifique los campos.');
+     } else {
+      this.cliente.setNombre(this.infoClienteForm.controls.nombre.value.toUpperCase());
+      this.cliente.setPaterno(this.infoClienteForm.controls.paterno.value.toUpperCase());
+      this.cliente.setMaterno(this.infoClienteForm.controls.materno.value.toUpperCase());
+      this.cliente.setAnioRegistro(this.infoClienteForm.controls.anioRegistro.value.toUpperCase());
+      this.cliente.setEmision(this.infoClienteForm.controls.emision.value.toUpperCase());
+      this.cliente.setClaveElector(this.infoClienteForm.controls.claveElector.value.toUpperCase());
+      this.cliente.setCurp(this.infoClienteForm.controls.curp.value.toUpperCase());
+      this.cliente.setRfc(this.infoClienteForm.controls.rfc.value.toUpperCase());
+      this.cliente.setOcr(this.infoClienteForm.controls.ocr.value.toUpperCase());
+      this.cliente.setNacimiento(this.fechaCompleta);
+      // this.infoClienteForm.controls.nacimiento.value.toUpperCase()
+      this.cliente.setSexo( this.infoClienteForm.controls.sexo.value.toUpperCase());
+      this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value.toUpperCase());
+      const phone = new Phone(0, this.infoClienteForm.controls.telefono.value.toUpperCase(),"","1","SAVE");
+      this.cliente.setPhones([]);
+      this.cliente.getPhones().push(phone);
+      this.saveS.setCliente(this.cliente);
+      console.log('obtenerDatosExt this.cliente');
+      console.log(this.cliente);
+      this.guardarDatos(this.cliente);
+     }
   }
 
-  guardarDatos(cliente: Cliente)
-  {
-    let jsonPersonalData = new JsonPersonalData(0,"",cliente.getPaterno(),cliente.getNombre(),cliente.getMaterno(),cliente.getSexo(),cliente.getNacimiento(),"es","",cliente.getPaisDeNacimiento(),"","1","",cliente.getOcr(), cliente.getRfc(),cliente.getCurp(),[],"",cliente.getPhones());
-    let operationData = new JsonOperationData("bid");
-    let jsonInnerData = new JsonInnerData(jsonPersonalData);
-    let jsonInnerDataString = JSON.stringify(jsonInnerData);
-    let jsonData = new JsonData(1, "","FINALIZADO","2",jsonInnerDataString,this.secuenciaId,1,0);
-    let jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
-    let jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
+  guardarDatos(cliente: Cliente) {
+    const jsonPersonalData = new JsonPersonalData(0,'',
+    cliente.getPaterno(),
+    cliente.getNombre(),
+    cliente.getMaterno(),
+    cliente.getSexo(),
+    cliente.getNacimiento(),
+    'es', '',
+    cliente.getPaisS() !== null ? cliente.getPaisS() : cliente.getPaisDeNacimiento(),
+    '', '1', '', cliente.getOcr(),
+    cliente.getRfc(),
+    cliente.getCurp(), '', [], '', cliente.getPhones());
+
+    const operationData = new JsonOperationData('bid');
+    const jsonInnerData = new JsonInnerData(jsonPersonalData);
+    const jsonInnerDataString = JSON.stringify(jsonInnerData);
+    const jsonData = new JsonData(1, '',
+    'FINALIZADO', '2', jsonInnerDataString, this.secuenciaId, 1, 0);
+    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
+    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.saveS.setJsonDatosActivity(jsonDatosActivity);
     this.activitiesService.actualizarDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
     (resultado: any) => {
       console.log(resultado);
-      if(resultado.code == -9999)
+      if(resultado.code === -9999)
       {
         this.saveS.setCliente(cliente);
         this.saveS.setPersonId(resultado.data.personId);
+// tslint:disable-next-line: max-line-length
+        this.navCtrl.navigateRoot('biometria-dactilar' +  (this.origin === 'Extranjero' ? '?origin=ext' : '?client=' + JSON.stringify(jsonPersonalData)));
         // alert("Datos guardados");
-        if(this.saveS.getTipoIdentificacion()=='INE')
+        /* if (this.saveS.getTipoIdentificacion()=='INE') {
           this.navCtrl.navigateRoot('consulta-ine');
-        else
+        } else {
           this.navCtrl.navigateRoot('info-grales');
+        } */
+      } else {
+        alert('Error al Guardar los datos');
+        // this.navCtrl.navigateRoot('biometria-dactilar');
       }
-      else{
-        // alert("Error");
-      }                      
     },
-    (err:HttpErrorResponse)=>{
+    (err: HttpErrorResponse) => {
       console.log(err);
     });
   }
@@ -171,20 +238,41 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
 
     } else {
       console.log('NO han llegado datos');
-      let timeOutBuscaDatos = setTimeout(() => {
+      const timeOutBuscaDatos = setTimeout(() => {
         this.analisis = this.saveS.getDatosOCR();
         if (this.analisis === '' || this.analisis === undefined || this.analisis === null) {
           this.consultarData();
-        } else 
-        {
+        } else {
           clearInterval(timeOutBuscaDatos);
-          this.fag = true;
+          if (this.analisis === '' || this.analisis === undefined || this.analisis === null) {
+            alert('Es necesario, reiniciar la extración de datos');
+            this.navCtrl.navigateRoot('tipo-identificacion');
+          } else {
+            if (this.analisis.name === '' || this.analisis.name === undefined || this.analisis.name === null) {
+              alert('Es necesario, reiniciar la extración de datos');
+              this.navCtrl.navigateRoot('tipo-identificacion');
+            } else {
+              if (this.analisis.name === '' || this.analisis.name === undefined || this.analisis.name === null) {
+                alert('Es necesario, reiniciar la extración de datos');
+                this.navCtrl.navigateRoot('tipo-identificacion');
+              } else {
+                this.cargarData();
+              }
+            }
+          }
+        }
+      }, 3000);
+    }
+  }
+
+  cargarData  () {
+    this.fag = true;
           this.cliente.setNombre(this.analisis.name);
           this.cliente.setPaterno(this.analisis.firstSurname);
           this.cliente.setMaterno(this.analisis.secondSurname);
-          let registryYear = this.analisis.registry_YEAR?this.analisis.registry_YEAR.substring(0,4):"";
+          const registryYear = this.analisis.registry_YEAR?this.analisis.registry_YEAR.substring(0,4):"";
           this.cliente.setAnioRegistro(registryYear);
-          let expedition_DATE = this.analisis.expedition_DATE?this.analisis.expedition_DATE.split("-")[0]:"";
+          const expedition_DATE = this.analisis.expedition_DATE?this.analisis.expedition_DATE.split("-")[0]:"";
           this.cliente.setEmision(expedition_DATE);
           this.cliente.setClaveElector(this.analisis.claveElector);
           this.cliente.setCurp(this.analisis.curp);
@@ -192,10 +280,25 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
           let campoOcr = this.analisis.mrz?this.analisis.mrz.split('<<')[1].substring(0,13):"";
           this.cliente.setOcr(campoOcr);
           let dateOfExpiry = this.analisis.dateOfExpiry?this.analisis.dateOfExpiry.split("-")[0]:"";
-          this.cliente.setVigencia(dateOfExpiry)
-          this.cliente.setTelefono("");
-          this.cliente.setNacimiento(this.analisis.dateOfBirth);
-          this.cliente.setSexo(this.analisis.gender);
+          this.cliente.setVigencia(dateOfExpiry);
+          this.cliente.setTelefono('');
+          this.fecha = this.analisis.dateOfBirth;
+          /* const dias = this.fecha.substr(8, 10);
+          const subFecha = this.fecha.substr(0, 8);
+          const numDias = Number(dias);
+          console.log('dias');
+          console.log(dias);
+          console.log('subFecha');
+          console.log(subFecha);
+          console.log('numDias');
+          console.log(numDias);
+          console.log('Fecha completa');
+          console.log(subFecha + numDias.toString());
+          this.fechaCompleta = subFecha + numDias.toString(); */
+          this.cliente.setNacimiento(this.fechaCompleta);
+          this.cliente.setSexo(this.analisis.gender === 'H' ? 'MASCULINO' : 'FEMENINO');
+          this.cliente.setPais(this.analisis.nationality);
+          this.cliente.setNumId(this.analisis.documentNumber);
 
           this.infoClienteForm = this.formBuilder.group({
 
@@ -217,29 +320,56 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
             claveElector: [this.cliente.getClaveElector(),
               [Validators.pattern(this.regex.validarClaveIne()),
               Validators.minLength(18)]],
-            curp: [this.cliente.getCurp(), 
+            curp: [this.cliente.getCurp(),
               [Validators.pattern(this.regex.validarCurp()),
               Validators.minLength(18)]],
-            rfc: [this.cliente.getRfc(), 
+            rfc: [this.cliente.getCurp().substr(0, 10),
               [Validators.required,
                 Validators.minLength(10),
                 Validators.pattern(this.regex.validarRfc())]],
             ocr: [this.cliente.getOcr(),
                 [Validators.pattern(this.regex.validarSoloNumeros(13)),
                 Validators.minLength(13)]],
-            vigencia: [this.cliente.getVigencia(), 
+            vigencia: [this.cliente.getVigencia(),
               [Validators.required,
                Validators.max(9999)]],
             telefono: [this.cliente.getTelefono(),
                [Validators.required,
                 Validators.minLength(10),
                 Validators.maxLength(10)]],
-            nacimiento: [this.cliente.getNacimiento(), Validators.required],
-            sexo: [this.cliente.getSexo()=='H'?'Masculino':'Femenino', Validators.required]
+            nacimiento: [this.fecha, Validators.required],
+            sexo: [this.cliente.getSexo(), Validators.required],
+            country: [this.cliente.getPais()],
+            idNumber: [this.cliente.getNumId()]
           });
-        }
-      }, 3000);
-    }
+  }
+
+  public obtenerDatosExt(): void {
+    this.cliente.setNombre(this.infoClienteForm.controls.nombre.value.toUpperCase());
+    this.cliente.setPaterno(this.infoClienteForm.controls.paterno.value.toUpperCase());
+    this.cliente.setMaterno(this.infoClienteForm.controls.materno.value.toUpperCase());
+    this.cliente.setAnioRegistro(this.infoClienteForm.controls.anioRegistro.value.toUpperCase());
+    this.cliente.setEmision(this.infoClienteForm.controls.emision.value.toUpperCase());
+    this.cliente.setClaveElector(this.infoClienteForm.controls.claveElector.value.toUpperCase());
+    this.cliente.setCurp(this.infoClienteForm.controls.curp.value.toUpperCase());
+    this.cliente.setRfc(this.infoClienteForm.controls.rfc.value.toUpperCase());
+    this.cliente.setOcr(this.infoClienteForm.controls.ocr.value.toUpperCase());
+    this.cliente.setNacimiento(this.fechaCompleta);
+      // this.infoClienteForm.controls.nacimiento.value.toUpperCase()
+    this.cliente.setSexo( this.infoClienteForm.controls.sexo.value.toUpperCase());
+    this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value.toUpperCase());
+    const phone = new Phone(0, this.infoClienteForm.controls.telefono.value.toUpperCase(),"","1","SAVE");
+    this.cliente.setPhones([]);
+    this.cliente.getPhones().push(phone);
+    this.guardarDatos(this.cliente);
+  }
+
+  resetOCR() {
+    this.navCtrl.navigateRoot('tipo-identificacion');
+  }
+
+  logout() {
+    this.login.finalizar();
   }
 
 }

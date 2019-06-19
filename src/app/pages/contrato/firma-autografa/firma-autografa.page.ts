@@ -187,7 +187,7 @@ export class FirmaAutografaPage implements OnInit {
       let campos: JsonCamposContrato[] = [];
       console.log('enviarDigital this.cliente');
       console.log(this.cliente);
-      let nombre = this.cliente.getNombre + ' ' + this.cliente.getPaterno()+" "+this.cliente.getMaterno();
+      let nombre = this.cliente.getNombre() + ' ' + this.cliente.getPaterno()+" "+this.cliente.getMaterno();
       let jsonCamposNombre = new JsonCamposContrato(1,"nombreSolicitante");
       campos.push(jsonCamposNombre);
       let jsonCamposRfc = new JsonCamposContrato(1,"RFC",this.cliente.getRfc());
@@ -307,7 +307,7 @@ export class FirmaAutografaPage implements OnInit {
       console.log('this.cliente');
       console.log(this.cliente);
       let campos: JsonCamposContrato[] = []
-      let nombre = this.cliente.getNombre+" "+this.cliente.getPaterno()+" "+this.cliente.getMaterno();
+      let nombre = this.cliente.getNombre()+" "+this.cliente.getPaterno()+" "+this.cliente.getMaterno();
       let jsonCamposNombre = new JsonCamposContrato(1,"nombreSolicitante", this.cliente.getNombre());
       campos.push(jsonCamposNombre);
       let jsonCamposRfc = new JsonCamposContrato(1,"RFC",this.cliente.getRfc());

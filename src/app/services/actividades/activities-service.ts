@@ -59,6 +59,17 @@ export class ActivitiesService {
     return this.http.put<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
 }
 
+actualizarDatosActivityINE(jsonDatosActivity: any, bearerToken: string): Observable<any> {
+  const headers = {
+      headers: new HttpHeaders({
+        'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + bearerToken
+        }),
+      };
+  const body = JSON.stringify(jsonDatosActivity);
+  return this.http.put<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+}
+
     private extractData(res: Response) {
       let body = res;
       return body || { };

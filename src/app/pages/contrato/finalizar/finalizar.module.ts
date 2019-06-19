@@ -2,18 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
-
 import { IonicModule } from '@ionic/angular';
-
-import { VerificacionPage } from './verificacion.page';
+import { FinalizarComponent } from './finalizar.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: VerificacionPage
+    component: FinalizarComponent
   }
 ];
-
 @NgModule({
   imports: [
     CommonModule,
@@ -21,6 +18,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [VerificacionPage]
+  declarations: [FinalizarComponent]
 })
-export class VerificacionPageModule {}
+export class FinalizarModule { }

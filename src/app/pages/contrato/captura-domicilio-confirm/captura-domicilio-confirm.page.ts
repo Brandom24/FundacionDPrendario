@@ -87,12 +87,13 @@ export class CapturaDomicilioConfirmPage implements OnInit {
     this.cliente.getNacimiento(),
     "es",
     "",
-    this.cliente.getPaisDeNacimiento(),"","1","",this.cliente.getOcr(), 
-    this.cliente.getRfc(),this.cliente.getCurp(),[],"",this.cliente.getPhones());
+    this.cliente.getPaisDeNacimiento(),"","1","","",this.cliente.getOcr());
+    // this.cliente.getRfc(),this.cliente.getCurp(),[],"",this.cliente.getPhones());
 
-    const jsonInnerData = new JsonInnerData(jsonPersonalData);
+     let jsonInnerData = new JsonInnerData(jsonPersonalData);
     const jsonInnerDataString = JSON.stringify(jsonInnerData);
     const jsonData = new JsonData(1, "","FINALIZADO","1",jsonInnerDataString,12,1,0);
+     
     const jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
     const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(

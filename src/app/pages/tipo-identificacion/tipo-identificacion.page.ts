@@ -16,6 +16,7 @@ import { CatalogoValuesOut } from '../../services/catalogos/model/catalogo-value
 import { VariablesSesion } from '../../services/model/variables-sesion.model';
 import { GuardarStorageService } from 'src/app/services/guardar-storage.service';
 import { DataClientesService } from '../../services/data-clientes.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-tipo-identificacion',
@@ -29,11 +30,12 @@ export class TipoIdentificacionPage implements OnInit {
     private alertCtrl: AlertController,
     private navCtrl: NavController,
     private guardarS: GuardarStorageService,
-    private dataClient: DataClientesService
+    private dataClient: DataClientesService,
+    private login: LoginService,
   ) { }
 
   ngOnInit() {
-
+    this.guardarS.setDatosOCR('');
   }
 
   onIdentificacionOficial() {
@@ -47,5 +49,8 @@ export class TipoIdentificacionPage implements OnInit {
     this.navCtrl.navigateRoot('identificacion-pasaporte');
   }
 
+  logout() {
+    this.login.finalizar();
+  }
 
 }

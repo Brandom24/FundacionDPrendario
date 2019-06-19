@@ -1,5 +1,5 @@
-import { Phone } from './Phone.model';
 import { JsonAddress } from 'src/app/services/actividades/model/json-address.model';
+import { Phone } from './Phone.model';
 
 export class Cliente {
 
@@ -46,6 +46,7 @@ export class Cliente {
     private asociarTel: any;
     private asociarEmail: any;
     private asociarDomi: any;
+    private paisS: string;
 
     constructor() { }
     public getJsonAddress(): JsonAddress[] {
@@ -56,6 +57,13 @@ export class Cliente {
         this.jsonAddress = jsonAddress;
     }
 
+    public getPaisS(): string {
+        return this.paisS;
+    }
+
+    public setPaisS(paisS: string){
+        this.paisS = paisS;
+    }
 
     public getNombre(): string {
         return this.nombre;

@@ -9,6 +9,8 @@ import { JsonMetadata } from 'src/app/services/actividades/model/json-metadata.m
 import { JsonDatosActivity } from 'src/app/services/actividades/model/json-datos-activity.model';
 import { Enroll } from './modal/Enroll.model';
 import { EnrollService } from 'src/app/services/enroll.service';
+import { ActivatedRoute } from '@angular/router';
+import { JsonPersonalData } from 'src/app/services/actividades/model/json-personal-data.model';
 
 declare var IdentyFingers: any;
 declare var ZoomAuthenticationHybrid: any;
@@ -36,6 +38,9 @@ export class BiometriaDactilarPage implements OnInit {
   validateCapture: boolean;
   jsonEnroll: Enroll;
 
+  client: JsonPersonalData;
+  origin: string;
+
   constructor(
     private alertCtrl: AlertController,
     private navCtrl: NavController,
@@ -46,7 +51,17 @@ export class BiometriaDactilarPage implements OnInit {
     private activityService: ActivitiesService,
     private saveS: GuardarStorageService,
     private enroll: EnrollService,
+    private route: ActivatedRoute
   ) {
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        if(params.client){
+          this.client = JSON.parse(params.client);
+        } else if(params.origin){
+          this.origin = 'ext';
+        }
+      }
+    });
   }
 
   ngOnInit() {
@@ -63,7 +78,12 @@ export class BiometriaDactilarPage implements OnInit {
   }
 
   onConsultaSimilitud() {
-    this.navCtrl.navigateRoot('consulta-similitud-confirmacion');
+    if(this.origin){
+      this.navCtrl.navigateRoot('finalizar');
+    } else {
+      this.navCtrl.navigateRoot('consulta-ine?client=' + JSON.stringify(this.client));
+    }
+    // this.navCtrl.navigateRoot('consulta-similitud-confirmacion');
     // if(this.validateCapture) {
     // this.navCtrl.navigateRoot('consulta-similitud-confirmacion');
 
@@ -91,7 +111,122 @@ export class BiometriaDactilarPage implements OnInit {
     await alert.present();
   }
 
-  async startFingersEnrollment() {
+  async selectBio() {
+    const alert = await this.alertCtrl.create({
+      header: 'Modo de captura dactilar.',
+      mode: 'ios',
+      message: '<img src="../../assets/img/huella_2.png" class=""><br/>'
+      + 'Selecione el modo de captura para huella dactilar.',
+      buttons: [
+        {
+          text: '2F',
+          handler: () => {
+            // Llamar 2F
+            this.startFingersEnrollment2F();
+          }
+        },
+        {
+          text: '4F',
+          handler: () => {
+            // llamar 4F
+            this.startFingersEnrollment4F();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async startFingersEnrollment2F() {
+    this.desahilitarBotonHuellas();
+    this.desahilitarBotonRostro();
+    this.activarSpinnerHuellas();
+    const loading = await this.loadingCtrl.create({
+      spinner: null,
+      message: 'Cargando...',
+      duration: 5000,
+      translucent: true,
+      cssClass: 'loading_img'
+    });
+    await loading.present();
+    this.actualizarActivity('EN PROCESO', this.secuenceId);
+    if (this.platform.is('ios')) {
+        this.platform.ready().then(async () => {
+            if (typeof IdentyFingers !== 'undefined') {
+              this.userId = 0;
+            const encryptionSecret: any = this.userId;
+            const { role, data } = await loading.onDidDismiss();
+            IdentyFingers.initialize2F(this.userId, this.login.token , 'Donde',
+              // idFinger
+              (result) =>  {
+                  this.idFinger = true;
+                  console.log('OnSucces FingersBidEnrollment', result);
+                  this.habilitarButonHuellas();
+                  this.habilitarButonRostro();
+                  this.DesactivarSipnnerHuellas();
+                  this.presentAlertConfirm('Tu huellas se han registrado correctamente');
+                  this.actualizarActivity("FINALIZADO",this.secuenceId);
+                  this.validateCapture = true;
+                  return (this.idFinger);
+                },
+              (error) =>  {
+                  this.idFinger = true;
+                  console.log('OnSucces FingersBidEnrollment', error);
+                  this.habilitarButonHuellas();
+                  this.habilitarButonRostro();
+                  this.DesactivarSipnnerHuellas();
+                  this.presentAlertConfirm('Tu huellas NO se han registrado correctamente');
+                  return (this.idFinger2);
+                });
+              setInterval(() => {
+                this.getIdFinger();
+                this.getIdFinger2();
+                   }, 100);
+                   this.habilitarButonHuellas();
+                   this.habilitarButonRostro();
+                   this.DesactivarSipnnerHuellas();
+                } else {
+                  this.presentAlertConfirm('Inicializando complemento, por favor vuelva intentarlo.');
+                  this.habilitarButonHuellas();
+                  this.habilitarButonRostro();
+                  this.DesactivarSipnnerHuellas();
+                    }
+             });
+      } else {
+        if (this.platform.is('android')) {
+              this.platform.ready().then(async () => {
+              if (typeof FingersBidEnrollment !== 'undefined') {
+                FingersBidEnrollment.initialize2F(0, 'Donde',
+                  async (jsonFingerPrintsString) =>  {
+                  console.log('Tu huellas son : ');
+                  console.log(jsonFingerPrintsString);
+                  const { role, data } = await loading.onDidDismiss();
+                  console.log('Se inicializo correctamente ó termino');
+                  // llamar metodo para guardar huellas en el back
+                  this.guardarHuellas(jsonFingerPrintsString);
+                  // this.actualizarActivity('FINALIZADO', this.secuenceId);
+                   } , async (error_initialize) => {
+                    const { role, data } = await loading.onDidDismiss();
+                      console.log('error_initialize FingersBidEnrollment', error_initialize);
+                    });
+
+                 setInterval(() => {
+                          this.getIdFinger();
+                          this.getIdFinger2();
+                       }, 100);
+                } else {
+                  this.presentAlertConfirm('Inicializando completomento, por favor vuelva intentarlo.');
+                      this.habilitarButonHuellas();
+                      this.habilitarButonRostro();
+                      this.DesactivarSipnnerHuellas();
+                }
+            });
+          }
+        }
+
+  }
+
+  async startFingersEnrollment4F() {
     this.desahilitarBotonHuellas();
     this.desahilitarBotonRostro();
     this.activarSpinnerHuellas();
@@ -226,7 +361,6 @@ export class BiometriaDactilarPage implements OnInit {
     } else {
       alert('No se retornando Huellas' + JSON.stringify(jsonFingerPrintsString));
     }
-    
 
   }
 
@@ -309,7 +443,7 @@ export class BiometriaDactilarPage implements OnInit {
   actualizarActivity(estatus: string, secuenciaId: number) {
     const code = '';
     const productId = 1;
-    const jsonData = new JsonData(productId,'', estatus, '1', '', secuenciaId, 1);
+    const jsonData = new JsonData(productId, this.saveS.getSystemCode(), estatus, '1', '', secuenciaId, 1);
     const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
     const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity,
@@ -318,5 +452,9 @@ export class BiometriaDactilarPage implements OnInit {
         console.log('actualizarDatosActivity');
         console.log(resultado);
       });
+  }
+
+  logout() {
+    this.login.finalizar();
   }
 }

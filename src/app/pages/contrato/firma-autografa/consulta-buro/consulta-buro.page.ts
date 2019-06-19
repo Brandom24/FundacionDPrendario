@@ -171,7 +171,7 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
             this.navCtrl.navigateRoot('firma-contrato');
           } else {
             this.loading.dismiss();
-            alert(respuesta['message']);
+            // alert(respuesta['message']);
             this.esCargando = false;
           }
         },
@@ -184,7 +184,7 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
 
   actualizarActivity(estatus: string) {
     const productId = 1;
-    const jsonData = new JsonData( productId, '', estatus,'1', '', 15, 1,this.saveS.getPersonId());
+    const jsonData = new JsonData( productId, this.saveS.getSystemCode(), estatus,'1', '', 15, 1,this.saveS.getPersonId());
     const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
     const jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
     this.activityService.actualizarDatosActivity(jsonDatosActivity,

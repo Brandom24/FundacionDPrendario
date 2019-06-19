@@ -47,8 +47,8 @@ export class IdentificacionOficialPage implements OnInit {
   backImg2: any;
   isenabled2: boolean;
   frontImg2: any;
-  secuenciaId: number
-  secuenciaOcr: number
+  secuenciaId: number;
+  secuenciaOcr: number;
 
   constructor(
     private alertCtrl: AlertController,
@@ -60,24 +60,34 @@ export class IdentificacionOficialPage implements OnInit {
     private saveS: GuardarStorageService,
     public camera: Camera,
   ) {
-    this.operationId = this.saveS.getOperationID();
+    
     const tipoId = this.saveS.getTipoFlujo();
-    this.secuenciaId = 0;
-    if (tipoId === 'alhajas') {
+    this.secuenciaId = 21;
+    /* if (tipoId === 'alhajas') {
       this.secuenciaId = 1;
       this.secuenciaOcr = 2;
     } else {
       this.secuenciaId = 6;
       this.secuenciaOcr = 7;
-    }
+    } */
 
    }
 
   ngOnInit() {
+    this.saveS.setDatosOCR('');
     this.anverso = '';
     this.reverso = '';
     this.esAnversoActiva = false;
     this.esCargando = false;
+    this.getOperationID();
+    if (this.operationId === null || this.operationId === undefined) {
+      this.getOperationID();
+      console.log('this.operationId', this.operationId);
+    }
+  }
+
+  getOperationID() {
+    this.operationId = this.saveS.getOperationID();
   }
 
   getImagenFront() {
@@ -177,18 +187,18 @@ export class IdentificacionOficialPage implements OnInit {
   }
 
   extraerOCR() {
-    
-    if(this.backImg && this.frontImg){
+    if (this.backImg && this.frontImg) {
         const imagen = new Imagen();
         const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
         let blobReverso;
         if (this.backImg) {
           blobReverso = imagen.convertirImagenEnBlob(this.backImg);
         }
-        
+
         this.actualizarActivity('EN PROCESO', this.secuenciaId);
         this.extraerDatosOcr(this.operationId, blobAnverso, this.login.token , blobReverso);
-        this.onBiometria();
+        // this.onBiometria();
+        this.navCtrl.navigateRoot('consulta-similitud-confirmacion?origin=Nacional');
     } else {
       this.alerta();
     }
@@ -221,8 +231,8 @@ export class IdentificacionOficialPage implements OnInit {
   extraerDatosOcr(operationId: any, fileAnverso: any, bearerToken: string, fileReverso?: any) {
     this.esCargando = true;
     // const jsonOcr = new JsonOcr('IDOFA', '8');
-    this.actualizarActivity('FINALIZADO',this.secuenciaId);
-    this.actualizarActivity('EN PROCESO',this.secuenciaOcr);
+    this.actualizarActivity('FINALIZADO', this.secuenciaId);
+    this.actualizarActivity('EN PROCESO', this.secuenciaOcr);
     this.documentosService.extraerDatosOcr2(+operationId,
       0, fileAnverso, 'IDOFA', bearerToken,
       fileReverso, 'IDOFB').subscribe(
@@ -251,12 +261,12 @@ export class IdentificacionOficialPage implements OnInit {
       console.log(error);
       switch (error['status']) {
         case 401:
-          alert('Es necesario iniciar session, nuemente para continuar');
+          alert('Es necesario iniciar session, nuevamente para continuar');
           this.navCtrl.navigateRoot('login');
           break;
 
           case 404:
-          alert('Es necesario iniciar session, nuemente para continuar');
+          alert('Es necesario iniciar session, nuevamente para continuar');
               this.navCtrl.navigateRoot('login');
             break;
 
@@ -270,7 +280,7 @@ export class IdentificacionOficialPage implements OnInit {
           this.extraerOCR();
             break;
         default:
-          alert('Es necesario iniciar session, nuemente para continuar');
+          alert('Es necesario iniciar session, nuevamente para continuar');
             this.navCtrl.navigateRoot('login');
           break;
       }
@@ -278,10 +288,10 @@ export class IdentificacionOficialPage implements OnInit {
     });
   }
 
-  actualizarActivity(estatus: string, secuenciaId:number) {
+  actualizarActivity(estatus: string, secuenciaId: number) {
       const code = '';
       const productId = 1;
-      const jsonData = new JsonData(productId,'', estatus, '1','', secuenciaId, 1);
+      const jsonData = new JsonData(productId, this.saveS.getSystemCode(), estatus, '1','', secuenciaId, 1);
       const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
       const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, +this.operationId);
       this.activityService.actualizarDatosActivity(jsonDatosActivity,
@@ -293,6 +303,10 @@ export class IdentificacionOficialPage implements OnInit {
           console.log('HttpErrorResponse actualizarActivity');
           console.log(error);
         });
+    }
+
+    logout() {
+      this.login.finalizar();
     }
 
 }
