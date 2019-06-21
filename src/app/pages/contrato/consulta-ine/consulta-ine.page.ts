@@ -288,14 +288,19 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
   }
   guardarDatos(json: JsonPersonalData) {
     // tslint:disable-next-line: max-line-length
+    console.log('Guardando datos:: consulta INE');
+    console.log(json);
     const jsonPersonalData = json;
     this.pData = jsonPersonalData;
     const operationData = new JsonOperationData('bid');
     const jsonInnerData = new JsonInnerData(jsonPersonalData);
     const jsonInnerDataString = JSON.stringify(jsonInnerData);
-    const jsonData = new JsonData(1, "","FINALIZADO","2", jsonInnerDataString, this.secuenciaId, 1, 0);
+    const jsonData = new JsonData(1, "","FINALIZADO","2", jsonInnerDataString, this.secuenciaId, 1, this.saveS.getPersonId());
     const jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
     const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
+    
+    console.log('Guardando datos COMPLETOS:: consulta INE');
+    console.log(jsonDatosActivity);
     this.saveS.setJsonDatosActivity(jsonDatosActivity);
     this.activitiesService.actualizarDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
     (resultado: any) => {
@@ -318,8 +323,12 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
   isValidoChange(event) {
     if (this.cardValid === true) {
       this.validINE = 'Identificación válida';
+      console.log('isValidoChange');
+      console.log('isValidoChange', this.cardValid + '::' + this.validINE);
     } else {
       this.validINE = 'Identificación no válida';
+      console.log('isValidoChange');
+      console.log('isValidoChange', this.cardValid + '::' + this.validINE);
     }
   }
 

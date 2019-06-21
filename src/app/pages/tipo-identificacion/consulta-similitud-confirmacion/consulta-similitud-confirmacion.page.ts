@@ -171,8 +171,9 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
       this.cliente.setClaveElector(this.infoClienteForm.controls.claveElector.value.toUpperCase());
       this.cliente.setCurp(this.infoClienteForm.controls.curp.value.toUpperCase());
       this.cliente.setRfc(this.infoClienteForm.controls.rfc.value.toUpperCase());
+      this.cliente.setObservations('BID_Tracking');
       this.cliente.setOcr(this.infoClienteForm.controls.ocr.value.toUpperCase());
-      this.cliente.setNacimiento(this.fechaCompleta);
+      this.cliente.setNacimiento(this.fecha);
       // this.infoClienteForm.controls.nacimiento.value.toUpperCase()
       this.cliente.setSexo( this.infoClienteForm.controls.sexo.value.toUpperCase());
       this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value.toUpperCase());
@@ -195,9 +196,9 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
     cliente.getNacimiento(),
     'es', '',
     cliente.getPaisS() !== null ? cliente.getPaisS() : cliente.getPaisDeNacimiento(),
-    '', '1', '', cliente.getOcr(),
+    '', '1', '', '', cliente.getOcr(),
     cliente.getRfc(),
-    cliente.getCurp(), '', [], '', cliente.getPhones());
+    cliente.getCurp(), [], '', cliente.getPhones());
 
     const operationData = new JsonOperationData('bid');
     const jsonInnerData = new JsonInnerData(jsonPersonalData);
@@ -282,7 +283,7 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
           let dateOfExpiry = this.analisis.dateOfExpiry?this.analisis.dateOfExpiry.split("-")[0]:"";
           this.cliente.setVigencia(dateOfExpiry);
           this.cliente.setTelefono('');
-          this.fecha = this.analisis.dateOfBirth;
+          this.fecha = this.analisis.dateOfBirth; // dateOfBirth
           /* const dias = this.fecha.substr(8, 10);
           const subFecha = this.fecha.substr(0, 8);
           const numDias = Number(dias);
@@ -295,7 +296,7 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
           console.log('Fecha completa');
           console.log(subFecha + numDias.toString());
           this.fechaCompleta = subFecha + numDias.toString(); */
-          this.cliente.setNacimiento(this.fechaCompleta);
+          this.cliente.setNacimiento(this.fecha);
           this.cliente.setSexo(this.analisis.gender === 'H' ? 'MASCULINO' : 'FEMENINO');
           this.cliente.setPais(this.analisis.nationality);
           this.cliente.setNumId(this.analisis.documentNumber);
@@ -337,7 +338,7 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
                [Validators.required,
                 Validators.minLength(10),
                 Validators.maxLength(10)]],
-            nacimiento: [this.fecha, Validators.required],
+            nacimiento: [this.cliente.getNacimiento(), Validators.required],
             sexo: [this.cliente.getSexo(), Validators.required],
             country: [this.cliente.getPais()],
             idNumber: [this.cliente.getNumId()]
@@ -354,7 +355,7 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
     this.cliente.setCurp(this.infoClienteForm.controls.curp.value.toUpperCase());
     this.cliente.setRfc(this.infoClienteForm.controls.rfc.value.toUpperCase());
     this.cliente.setOcr(this.infoClienteForm.controls.ocr.value.toUpperCase());
-    this.cliente.setNacimiento(this.fechaCompleta);
+    this.cliente.setNacimiento(this.fecha);
       // this.infoClienteForm.controls.nacimiento.value.toUpperCase()
     this.cliente.setSexo( this.infoClienteForm.controls.sexo.value.toUpperCase());
     this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value.toUpperCase());

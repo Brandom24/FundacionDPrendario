@@ -10,6 +10,7 @@ export class Cliente {
     private emision: string;
     private claveElector: string;
     private curp: string;
+    private observations: string;
     private rfc: string;
     private ocr: string;
     private vigencia: string;
@@ -55,6 +56,15 @@ export class Cliente {
 
     public setJsonAddress(jsonAddress: JsonAddress[]): void {
         this.jsonAddress = jsonAddress;
+    }
+
+    //observations
+    public getObservations(): string {
+        return this.observations;
+    }
+
+    public setObservations(observations: string) {
+        this.observations = observations;
     }
 
     public getPaisS(): string {
