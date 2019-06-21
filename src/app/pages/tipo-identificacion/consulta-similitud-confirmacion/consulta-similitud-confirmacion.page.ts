@@ -187,9 +187,9 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
   }
 
   guardarDatos(cliente: Cliente) {
-    const jsonPersonalData = new JsonPersonalData(0,'',
-    cliente.getPaterno(),
+    const jsonPersonalData = new JsonPersonalData(0, '',
     cliente.getNombre(),
+    cliente.getPaterno(),
     cliente.getMaterno(),
     cliente.getSexo(),
     cliente.getNacimiento(),

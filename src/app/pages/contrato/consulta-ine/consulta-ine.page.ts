@@ -256,7 +256,7 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
     // {'id': this.saveS.getPersonId(), 'observations': this.validINE.toString()} 
     console.log('jsonData validINE :');
     console.log(jsonData);
-    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1); 
+    const jsonMetaData = new JsonMetadata(0, '', 0, 0, 1, 1);
 
     /* const jsonData = {
       'data': {

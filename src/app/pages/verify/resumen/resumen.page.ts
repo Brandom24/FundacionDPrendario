@@ -24,7 +24,33 @@ export class ResumenPage implements OnInit {
     ) { }
 
   ngOnInit() {
+
     this.resumen = this.saveS.getIdentifyFinger();
+
+    /* {
+      code: -9999,
+        data: {
+        operationId: 2386,
+        person: {
+          birth_date: "1981-02-20T00:00:00.000+0000",
+          code: "bid0002546",
+          country_of_birth: null,
+          email: "",
+          first_name: "GERARDO",
+          id: 1059,
+          language: "es",
+          last_name: "CARDENAS",
+          last_update_date: "2019-06-11T19:13:12.000+0000",
+          last_update_user_id: 1,
+          marital_status: "",
+          middle_name: "MARTINEZ",
+          person_type_Id: 1,
+          register_date: "2019-06-11T19:11:52.064+0000",
+          register_user_id: 1,
+          sex: "Mascu"
+  } } }; */
+    // this.resumen.data.person.register_date = this.resumen.data.person.register_date.substr(0, 10);
+    // this.resumen.data.person.birth_date = this.resumen.data.person.birth_date.substr(0, 10);
     this.secuenceId = 27;
   }
 
