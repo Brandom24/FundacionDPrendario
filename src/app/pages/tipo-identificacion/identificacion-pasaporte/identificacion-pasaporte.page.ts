@@ -96,8 +96,8 @@ export class IdentificacionPasaportePage implements OnInit {
   }
 
   extraerOCR() {
-    let options: NavigationOptions = {};
-    if(this.document_ext === 'p'){
+    const options: NavigationOptions = {};
+    if (this.document_ext === 'p') {
       const imagen = new Imagen();
       const blobAnverso = imagen.convertirImagenEnBlob(this.frontImg);
       let blobReverso;

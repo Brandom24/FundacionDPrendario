@@ -10,7 +10,7 @@
             <ion-card-content>
                 <div text-center>
                         <ion-input maxlength="15" [(ngModel)]="user" class="datos_input" type="email" name="email" placeholder="Usuario"></ion-input>
-                        <ion-button [disabled]=" user.length < 3" class="boton_style" (click)="goVerify()">Capturar huella
+                        <ion-button [disabled]=" user.length < 3" class="boton_style" (click)="startFingersEnrollment()">Capturar huella
                                 <ion-icon slot="end" name="log-in"></ion-icon>
                             </ion-button>
                     <!-- <form>
@@ -31,7 +31,7 @@
             {{estampaTiempo}}
         </p>
         <p class="color_font_2" text-right>
-            Versión: 1.0.8
+            Versión: 1.0.9
         </p>
     </div>
 </ion-content>

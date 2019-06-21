@@ -55,7 +55,7 @@ export class ConsultaInePage implements OnInit {
     private saveS: GuardarStorageService,
     private activitiesService: ActivitiesService,
     private route: ActivatedRoute,
-    public camera: Camera) { 
+    public camera: Camera) {
     this.route.queryParams.subscribe(params => {
       if (params) {
         this.pData = JSON.parse(params.client);
@@ -65,7 +65,7 @@ export class ConsultaInePage implements OnInit {
     this.cardValid = true;
     this.validINE = 'Identificación válida';
     this.secuenciaId = 0;
-    if(this.saveS.getTipoFlujo() == "alhajas")
+    if (this.saveS.getTipoFlujo() === "alhajas")
     {
       this.secuenciaId = 4;
     }
@@ -288,20 +288,19 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
   }
   guardarDatos(json: JsonPersonalData) {
     // tslint:disable-next-line: max-line-length
-    let jsonPersonalData = json;
+    const jsonPersonalData = json;
     this.pData = jsonPersonalData;
-    let operationData = new JsonOperationData("bid");
-    let jsonInnerData = new JsonInnerData(jsonPersonalData);
-    let jsonInnerDataString = JSON.stringify(jsonInnerData);
-    let jsonData = new JsonData(1, "","FINALIZADO","2",jsonInnerDataString,this.secuenciaId,1,0);
-    let jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
-    let jsonDatosActivity = new JsonDatosActivity(jsonData,jsonMetaData, this.saveS.getOperationID());
+    const operationData = new JsonOperationData('bid');
+    const jsonInnerData = new JsonInnerData(jsonPersonalData);
+    const jsonInnerDataString = JSON.stringify(jsonInnerData);
+    const jsonData = new JsonData(1, "","FINALIZADO","2", jsonInnerDataString, this.secuenciaId, 1, 0);
+    const jsonMetaData = new JsonMetadata(0,"",0,0,1,1);
+    const jsonDatosActivity = new JsonDatosActivity(jsonData, jsonMetaData, this.saveS.getOperationID());
     this.saveS.setJsonDatosActivity(jsonDatosActivity);
     this.activitiesService.actualizarDatosActivity(jsonDatosActivity, this.saveS.getBearerToken()).subscribe(
     (resultado: any) => {
       console.log(resultado);
-      if(resultado.code == -9999)
-      {
+      if (resultado.code === -9999) {
         this.navCtrl.navigateRoot('finalizar');
       } else {
         alert('Error al Guardar los datos');

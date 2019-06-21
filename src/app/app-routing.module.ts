@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'resumen', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
   { path: 'direcciones', loadChildren: './pages/direcciones/direcciones.module#DireccionesPageModule' },
   { path: 'clientes-lista', loadChildren: './pages/clientes-lista/clientes-lista.module#ClientesListaPageModule' },

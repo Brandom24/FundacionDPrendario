@@ -193,7 +193,7 @@ export class LoginPage implements OnInit {
             break;
 
             case false:
-            alert('Cliente ó Huella no validas');
+            alert('Usuario ó Huella no validas');
             break;
           default:
             break;
@@ -207,7 +207,7 @@ export class LoginPage implements OnInit {
         this.habilitarButonHuellas();
         this.habilitarButonRostro();
         this.DesactivarSipnnerHuellas();
-        this.presentAlertConfirm('Tu huella y Cliente NO se han encontrado');
+        this.presentAlertConfirm('Por favor, volver a intentarlo.');
 
       }
     );

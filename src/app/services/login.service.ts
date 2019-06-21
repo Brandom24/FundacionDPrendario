@@ -236,7 +236,7 @@ export class LoginService {
                      //-9401
                   case -9401:
                     this.loading.dismiss();
-                    // alert('Este cliente NO esta registrado : ' + JSON.stringify(data));
+                    // alert('Este cliente no esta registrado : ' + JSON.stringify(data));
                     this.navCtrl.navigateRoot('tipo-identificacion');
                     break;
 
