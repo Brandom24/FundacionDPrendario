@@ -27,7 +27,7 @@ export class ResumenPage implements OnInit {
     // 
     this.resumen = this.saveS.getIdentifyFinger();
 
-     /* {
+       /* {
       code: -9999,
         data: {
         operationId: 2386,
@@ -47,8 +47,9 @@ export class ResumenPage implements OnInit {
           person_type_Id: 1,
           register_date: "2019-06-11T19:11:52.064+0000",
           register_user_id: 1,
-          sex: "Mascu"
-  } } };  */
+          sex: "Mascu",
+          observations: "valido"
+  } } };    */
     // this.resumen.data.person.register_date = this.resumen.data.person.register_date.substr(0, 10);
     // this.resumen.data.person.birth_date = this.resumen.data.person.birth_date.substr(0, 10);
     this.secuenceId = 27;
