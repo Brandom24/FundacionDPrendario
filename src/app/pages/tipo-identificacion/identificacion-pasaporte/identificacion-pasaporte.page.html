@@ -15,12 +15,13 @@
         <ion-row justify-content-center align-items-center>
             <ion-col justify-content-center align-items-center>
                 <div class="" text-center>
-                    <p><b> Seleciona un opción de identificación </b></p>
-                    <span><ion-icon class="style_icon_logout" name="power" (click)="logout()"></ion-icon></span>  
+                    <p><b>Selecciona una opción de identificación</b></p>
+                    
                     <ion-select okText="Aceptar" [(ngModel)]="document_ext" (ngModelChange)="restart()" cancelText="Cancelar">
                         <ion-select-option value="p">Pasaporte</ion-select-option>
                         <ion-select-option value="m">FM2</ion-select-option>
                     </ion-select>
+                    <span><ion-icon class="style_icon_logout" name="power" (click)="logout()"></ion-icon></span>  
                 </div>
             </ion-col>
             <ion-item-divider></ion-item-divider>

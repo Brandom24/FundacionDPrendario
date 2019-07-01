@@ -65,8 +65,8 @@ export class ViviendaPage implements OnInit {
         const blob = this.b64toBlob(imageData, 'image/jpeg', 512);
         this.photos.set('blobS', blob);
       }
-    console.log('INFORMACION DEL MAP' + this.photos.get(1));
-    console.log('TAMAÑO DEL MAP' + this.photos.size);
+   // console.log('INFORMACION DEL MAP' + this.photos.get(1));
+   // console.log('TAMAÑO DEL MAP' + this.photos.size);
     }, (err) => {
       console.log(err);
     });

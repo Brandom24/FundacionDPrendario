@@ -210,6 +210,7 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
         this.loading.dismiss();
         // alert('Archivo guardado con éxito');
         // this.navCtrl.navigateRoot('info-grales');
+        this.pData.observations=this.validINE;
         this.guardarDatos(this.pData);
       } else {
         // alert(respuesta['message']);
@@ -290,8 +291,11 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
     // tslint:disable-next-line: max-line-length
     console.log('Guardando datos:: consulta INE');
     console.log(json);
+    
+    json.code=null;
     const jsonPersonalData = json;
-    this.pData = jsonPersonalData;
+    //this.pData = jsonPersonalData;
+    
     const operationData = new JsonOperationData('bid');
     const jsonInnerData = new JsonInnerData(jsonPersonalData);
     const jsonInnerDataString = JSON.stringify(jsonInnerData);
@@ -321,7 +325,7 @@ cargarDocumento(fileAnverso: any, bearerToken: string) {
   }
 
   isValidoChange(event) {
-    if (this.cardValid === true) {
+    if (this.cardValid) {
       this.validINE = 'Identificación válida';
       console.log('isValidoChange');
       console.log('isValidoChange', this.cardValid + '::' + this.validINE);

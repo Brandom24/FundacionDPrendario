@@ -55,7 +55,7 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
         this.origin = params.origin;
       }
     });
-    //console.log(this.navParams.data);
+   
     const date: Date = new Date();
 // tslint:disable-next-line: max-line-length
     this.maxDate = (date.getUTCFullYear() - 18) + '-' + (date.getUTCMonth() < 10 ? '0' + date.getUTCMonth(): date.getUTCMonth()) + '-' + (date.getUTCDay() < 10 ? '0' + date.getUTCDay() : date.getUTCDay());
@@ -156,38 +156,67 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
 
   obtenerDatos() {
      // if con validaciones
-     if (this.infoClienteForm.controls.nombre.value === ''
-     || this.infoClienteForm.controls.paterno.value === ''
-     || this.infoClienteForm.controls.materno.value === ''
-     || this.infoClienteForm.controls.sexo.value === ''
+     if (this.infoClienteForm.controls.materno.value === '' && origin.toUpperCase()==='NACIONAL') {
+      alert('Verifique los campos.');
+      return;
+     }
+
+     if (this.infoClienteForm.controls.nombre.value    === ''
+     || this.infoClienteForm.controls.paterno.value    === ''
+     || this.infoClienteForm.controls.sexo.value       === ''
      || this.infoClienteForm.controls.nacimiento.value === '' ) {
       alert('Verifique los campos.');
      } else {
+      console.log('Log: obtenerDatos >> preparando datos para persistencia');
+      
       this.cliente.setNombre(this.infoClienteForm.controls.nombre.value.toUpperCase());
+      console.log('Log :1 ',this.infoClienteForm.controls.nombre.value);
       this.cliente.setPaterno(this.infoClienteForm.controls.paterno.value.toUpperCase());
+      console.log('Log :2 ',this.infoClienteForm.controls.paterno.value);
       this.cliente.setMaterno(this.infoClienteForm.controls.materno.value.toUpperCase());
-      this.cliente.setAnioRegistro(this.infoClienteForm.controls.anioRegistro.value.toUpperCase());
-      this.cliente.setEmision(this.infoClienteForm.controls.emision.value.toUpperCase());
+      console.log('Log :3 ',this.infoClienteForm.controls.materno.value);
+      this.cliente.setAnioRegistro(this.infoClienteForm.controls.anioRegistro.value);
+      console.log('Log :4 ',this.infoClienteForm.controls.anioRegistro.value);
+      this.cliente.setEmision(this.infoClienteForm.controls.emision.value);
+      console.log('Log :5 ',this.infoClienteForm.controls.emision.value);
       this.cliente.setClaveElector(this.infoClienteForm.controls.claveElector.value.toUpperCase());
+      console.log('Log :6 ',this.infoClienteForm.controls.claveElector.value);
       this.cliente.setCurp(this.infoClienteForm.controls.curp.value.toUpperCase());
+      console.log('Log :7 ',this.infoClienteForm.controls.curp.value);
       this.cliente.setRfc(this.infoClienteForm.controls.rfc.value.toUpperCase());
+      console.log('Log :8 ',this.infoClienteForm.controls.rfc.value);
       this.cliente.setObservations('BID_Tracking');
-      this.cliente.setOcr(this.infoClienteForm.controls.ocr.value.toUpperCase());
-      this.cliente.setNacimiento(this.fecha);
+      console.log('Log :9 ');
+      this.cliente.setOcr(this.infoClienteForm.controls.ocr.value);
+      console.log('Log :10 ',this.infoClienteForm.controls.ocr.value);
+     
+      let date2 = (new Date(this.infoClienteForm.controls.nacimiento.value.toString()));
+      let date3 = date2.getFullYear()+"-"+ (date2.getMonth()+1 < 10 ? '0' + (date2.getMonth()+1): (date2.getMonth()+1)) +"-"+date2.getDate();
+
+      this.cliente.setNacimiento(date3);
       // this.infoClienteForm.controls.nacimiento.value.toUpperCase()
+      console.log('Log :11 ',this.fecha);
       this.cliente.setSexo( this.infoClienteForm.controls.sexo.value.toUpperCase());
-      this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value.toUpperCase());
-      const phone = new Phone(0, this.infoClienteForm.controls.telefono.value.toUpperCase(),"","1","SAVE");
+      console.log('Log :12 ',this.infoClienteForm.controls.sexo.value.toUpperCase());
+      this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value);
+      console.log('Log :13 ');
+      const phone = new Phone(0, this.infoClienteForm.controls.telefono.value,"","1","SAVE");
+      console.log('Log :14 ',this.infoClienteForm.controls.telefono.value);
       this.cliente.setPhones([]);
+      console.log('Log :15 ');
       this.cliente.getPhones().push(phone);
+      console.log('Log :16');
       this.saveS.setCliente(this.cliente);
-      console.log('obtenerDatosExt this.cliente');
+      
+      console.log('Log: obtenerDatos >> obtenerDatosExt this.cliente');
       console.log(this.cliente);
       this.guardarDatos(this.cliente);
      }
   }
 
   guardarDatos(cliente: Cliente) {
+    console.log('Depuración: enviando datos para persistencia');
+
     const jsonPersonalData = new JsonPersonalData(0, '',
     cliente.getNombre(),
     cliente.getPaterno(),
@@ -229,6 +258,7 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
       }
     },
     (err: HttpErrorResponse) => {
+      console.log('Error: eror al enviar datos para persistencia:');
       console.log(err);
     });
   }
@@ -267,6 +297,9 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
   }
 
   cargarData  () {
+
+    console.log('Depuración: cargar datos OCR');
+
     this.fag = true;
           this.cliente.setNombre(this.analisis.name);
           this.cliente.setPaterno(this.analisis.firstSurname);
@@ -283,6 +316,9 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
           let dateOfExpiry = this.analisis.dateOfExpiry?this.analisis.dateOfExpiry.split("-")[0]:"";
           this.cliente.setVigencia(dateOfExpiry);
           this.cliente.setTelefono('');
+          
+          console.log('Depuración: this.analisis.dateOfBirth >> ',this.analisis.dateOfBirth);
+
           this.fecha = this.analisis.dateOfBirth; // dateOfBirth
           /* const dias = this.fecha.substr(8, 10);
           const subFecha = this.fecha.substr(0, 8);
@@ -296,6 +332,10 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
           console.log('Fecha completa');
           console.log(subFecha + numDias.toString());
           this.fechaCompleta = subFecha + numDias.toString(); */
+          console.log('Depuración: this.analisis.dateOfBirth >> ',this.analisis.dateOfBirth);
+          
+          this.fecha=this.addDays(new Date(this.analisis.dateOfBirth),1);
+          console.log('Depuración: this.fecha >> ',this.fecha);
           this.cliente.setNacimiento(this.fecha);
           this.cliente.setSexo(this.analisis.gender === 'H' ? 'MASCULINO' : 'FEMENINO');
           this.cliente.setPais(this.analisis.nationality);
@@ -349,8 +389,8 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
     this.cliente.setNombre(this.infoClienteForm.controls.nombre.value.toUpperCase());
     this.cliente.setPaterno(this.infoClienteForm.controls.paterno.value.toUpperCase());
     this.cliente.setMaterno(this.infoClienteForm.controls.materno.value.toUpperCase());
-    this.cliente.setAnioRegistro(this.infoClienteForm.controls.anioRegistro.value.toUpperCase());
-    this.cliente.setEmision(this.infoClienteForm.controls.emision.value.toUpperCase());
+    this.cliente.setAnioRegistro(this.infoClienteForm.controls.anioRegistro.value);
+    this.cliente.setEmision(this.infoClienteForm.controls.emision.value);
     this.cliente.setClaveElector(this.infoClienteForm.controls.claveElector.value.toUpperCase());
     this.cliente.setCurp(this.infoClienteForm.controls.curp.value.toUpperCase());
     this.cliente.setRfc(this.infoClienteForm.controls.rfc.value.toUpperCase());
@@ -358,19 +398,39 @@ export class ConsultaSimilitudConfirmacionPage implements OnInit {
     this.cliente.setNacimiento(this.fecha);
       // this.infoClienteForm.controls.nacimiento.value.toUpperCase()
     this.cliente.setSexo( this.infoClienteForm.controls.sexo.value.toUpperCase());
-    this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value.toUpperCase());
-    const phone = new Phone(0, this.infoClienteForm.controls.telefono.value.toUpperCase(),"","1","SAVE");
+    this.cliente.setVigencia(this.infoClienteForm.controls.vigencia.value);
+    const phone = new Phone(0, this.infoClienteForm.controls.telefono.value,"","1","SAVE");
     this.cliente.setPhones([]);
     this.cliente.getPhones().push(phone);
     this.guardarDatos(this.cliente);
   }
 
   resetOCR() {
-    this.navCtrl.navigateRoot('tipo-identificacion');
+    this.navCtrl.navigateRoot('identificacion-oficial');
+    
+    //this.navCtrl.navigateRoot('tipo-identificacion');
+  }
+
+  resetOCRex() {
+    this.navCtrl.navigateRoot('identificacion-pasaporte');
+    
+    //this.navCtrl.navigateRoot('tipo-identificacion');
   }
 
   logout() {
     this.login.finalizar();
   }
+
+  addDays(date: Date, days: number): String {
+    try {
+      date.setDate(date.getDate() + days);
+    } catch (error) {
+      console.log('Log: Error al procesar la fecha');
+      return "";
+    }
+    return date.toDateString();
+
+    
+ }
 
 }

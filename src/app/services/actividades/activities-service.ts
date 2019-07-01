@@ -34,6 +34,8 @@ export class ActivitiesService {
               .set('code',code)
               .set('productId',productId)
             };
+
+        console.log('Depuración: obtenerCurrentActivity >> productId Request',productId);
         return this.http.get<any>(this.endpoint + '/bid/rest/v1/activities/current', headers).pipe(map(this.extractData));
     }
 
@@ -45,8 +47,11 @@ export class ActivitiesService {
             }),
           };
       const body = JSON.stringify(jsonDatosActivity);
-      return this.http.post<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
-  }
+     // console.log('Depuración: crearDatosActivity >> JSON Request',body);
+      //return this.http.post<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+      return this.http.post<any>('http://frd.buroidentidad.com:9411/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+  
+    }
 
   actualizarDatosActivity(jsonDatosActivity: JsonDatosActivity, bearerToken: string): Observable<any> {
     const headers = {
@@ -56,10 +61,16 @@ export class ActivitiesService {
           }),
         };
     const body = JSON.stringify(jsonDatosActivity);
-    return this.http.put<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
-}
+   // console.log('Depuración: actualizarDatosActivity >> JSON Request',body);
+    //return this.http.put<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+    return this.http.put<any>('http://frd.buroidentidad.com:9411/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+
+
+  }
 
 actualizarDatosActivityINE(jsonDatosActivity: any, bearerToken: string): Observable<any> {
+
+  console.log('Depuración: >> actualizando datos INE');
   const headers = {
       headers: new HttpHeaders({
         'Content-type': 'application/json',
@@ -67,7 +78,11 @@ actualizarDatosActivityINE(jsonDatosActivity: any, bearerToken: string): Observa
         }),
       };
   const body = JSON.stringify(jsonDatosActivity);
-  return this.http.put<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+  console.log('Depuración: actualizarDatosActivityINE >> JSON Request',body);
+
+  //return this.http.put<any>(this.endpoint + '/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+  return this.http.put<any>('http://frd.buroidentidad.com:9411/bid/rest/v1/operations', body, headers).pipe(map(this.extractData));
+
 }
 
     private extractData(res: Response) {

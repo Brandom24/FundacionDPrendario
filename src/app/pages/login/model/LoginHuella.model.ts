@@ -1,6 +1,6 @@
 
 export class LoginHuella {
-
+   /*
     public operationId: number;
     public personID: number;
     public code: string;
@@ -8,7 +8,10 @@ export class LoginHuella {
     public finger: string;
     public fingers: boolean;
     public uid: string;
+    */
 
+   public data: string;
+   
     constructor() { }
 
 }

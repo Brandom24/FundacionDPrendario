@@ -15,18 +15,22 @@ import { ActivitiesService } from 'src/app/services/actividades/activities-servi
 export class ResumenPage implements OnInit {
   resumen: any;
   secuenceId: number;
+  success: boolean;
 
   constructor(
     private saveS: GuardarStorageService,
     private navCtrl: NavController,
     private login: LoginService,
     private activityService: ActivitiesService,
-    ) { }
+    ) {
+      this.success = true;
+    }
 
   ngOnInit() {
     // 
     this.resumen = this.saveS.getIdentifyFinger();
-
+    
+    console.log('Depuración: his.resumen >>',this.resumen);
        /* {
       code: -9999,
         data: {

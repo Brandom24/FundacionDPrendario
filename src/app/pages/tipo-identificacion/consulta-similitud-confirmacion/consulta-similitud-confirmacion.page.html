@@ -49,10 +49,10 @@
                             </ng-container>
                           </div>
                         <ion-item>
-                            <ion-label position="stacked">Apellido materno*: </ion-label>
+                            <ion-label position="stacked">Apellido materno: </ion-label>
                             <ion-input maxlength="30" style="text-transform:uppercase" formControlName="materno"></ion-input>
                         </ion-item>
-                        <div class="validation-errors">
+                        <div class="validation-errors" *ngIf="origin === 'Nacional'">
                             <ng-container *ngFor="let validation of validation_messages.materno">
                               <div class="error-message" *ngIf="infoClienteForm.get('materno').hasError(validation.type)">
                                 <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
@@ -68,7 +68,7 @@
                         </ion-item>
                         <ion-item><!-- formControlName="nacimiento" -->
                             <ion-label position="stacked">Fecha de nacimiento*:</ion-label>
-                            <ion-datetime display-format="DD-MM-YYYY" [max]="maxDate" formControlName="nacimiento"></ion-datetime>
+                            <ion-datetime display-format="YYYY-MM-DD"  [max]="maxDate" formControlName="nacimiento"></ion-datetime>
                         </ion-item>
                         <!-- picker-format="DD-MM-YYYY" -->
                         <ion-item *ngIf="origin === 'Nacional'">
@@ -95,7 +95,7 @@
                           </div>
                         <ion-item *ngIf="origin === 'Nacional'">
                             <ion-label position="stacked">Año de registro:</ion-label>
-                            <ion-input maxlength="4" style="text-transform:uppercase" formControlName="anioRegistro"></ion-input>
+                            <ion-input maxlength="4" style="text-transform:uppercase" type="number" formControlName="anioRegistro"></ion-input>
                             <!-- <ion-datetime display-format="YYYY" formControlName="anioRegistro"></ion-datetime> -->
                         </ion-item>
                         <div class="validation-errors" *ngIf="origin === 'Nacional'">
@@ -218,20 +218,24 @@
               <ion-ripple-effect></ion-ripple-effect>
               RECAPTURAR
           </ion-button>
-        <ion-button color="primary" (click)="obtenerDatos()" [disabled]="infoClienteForm && infoClienteForm.invalid">
-            <ion-ripple-effect></ion-ripple-effect>
-            CONTINUAR
-        </ion-button>
+          <ion-button color="primary" (click)="obtenerDatos()" [disabled]="infoClienteForm && infoClienteForm.invalid">
+              <ion-ripple-effect></ion-ripple-effect>
+              CONTINUAR
+          </ion-button>
+          
+       
       </div>
         <div *ngIf="origin === 'Extranjero'">
-            <ion-button color="primary" (click)="resetOCR()" >
+            <ion-button color="primary" (click)="resetOCRex()" >
                 <ion-ripple-effect></ion-ripple-effect>
                 RECAPTURAR
             </ion-button>
             <ion-button color="primary" (click)="obtenerDatos()" [disabled]="false">
-              <ion-ripple-effect></ion-ripple-effect>
-                CONTINUAR
-          </ion-button>
+                <ion-ripple-effect></ion-ripple-effect>
+                  CONTINUAR
+            </ion-button>
+            
+
         </div>
         
     </ion-toolbar>

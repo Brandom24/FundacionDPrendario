@@ -89,24 +89,61 @@ export class LoginService {
               });
   }
 
-  verifyUser(user: string, password: string) {
+  verifyUser(user: string, password: string): Observable<any> {
+    
+    const jsonLoginUserData = {
+      'user': user,
+      'password': password};
+
+      const jsonLoginUserData2 = {
+        'data': jsonLoginUserData};
+
+    const body = JSON.stringify(jsonLoginUserData2);
+    console.log('Depuración: >> JSON Request', body);
+    console.log('Depuración: >> Token Request', this.token);
+    
+       //Construimos los headers
+       let headers = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.token})};
+  
+    return this.http.post<any>('http://frd.buroidentidad.com:9419/bid/rest/v1/login', body, headers)
+    .pipe(map(this.extractData));
+
+  }
+
+
+
+  verifyUser1(user: string, password: string) {
 
     this.loading.present('Verificando datos..');
-
-    const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.token
-    });
-
+      //Construimos los headers
+       
+       let headers = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.token})};
+          
     this.dataUser.setUser(user);
     this.dataUser.setPassword(password);
 
-    const formData = new FormData();
-    formData.append('json', JSON.stringify(this.dataUser));
+    const jsonLoginUserData = {
+                               'user': user,
+                               'password': password};
 
-    return this.http.post(URL_SERVICIOS + '/auth/login', formData, {headers})
-              .subscribe( async data => {
+    const jsonLoginData = {'data': jsonLoginUserData};
+    const body = JSON.stringify(jsonLoginData);
+  
 
-                console.log('verifyUser', data);
+    console.log('Depuración: >> JSON Request', body);
+    console.log('Depuración: >> Token Request', this.token);
+
+              return this.http.post<any>('http:frd.buroidentidad.com:9419/bid/rest/v1/login', body, headers)
+               .subscribe( async data => {
+                
+               // console.log('Depuración: Login usuariio >> ', data);
+
                 this.result = data['resultOK'];
                 this.message = data['message'];
                 this.typeUser = data['user'];
@@ -200,7 +237,94 @@ export class LoginService {
   }
 
   verifyFinger(finger: any) {
-    this.loading.present('Verificando datos..');
+    this.loading.present('Verificando datos...');
+
+    let headers = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.token,
+        'Accept': '*/*'
+      })};
+
+      const jsonRequestData = {
+        'userType': 2,
+        'fingerPrint': finger};
+  
+        const jsonRequestMetadata = {
+          'operationId':this._store.getOperationID(),
+          'data': jsonRequestData};
+
+          const body = JSON.stringify(jsonRequestMetadata);
+
+    return this.http.post('http://frd.buroidentidad.com:9420/bid/fingerIdentification/identify', body, headers)
+              .subscribe( async data => {
+                console.log('Depuración: data result identifyFinger');
+                console.log(JSON.stringify(data));
+                // code: -9601
+                switch (data['code']) {
+                  case -9601:
+                    this.loading.dismiss();
+                    // alert('Este cliente NO esta registrado : ' + JSON.stringify(data));
+                    this.navCtrl.navigateRoot('tipo-identificacion');
+                    break;
+
+                  case -9999:
+                    this.loading.dismiss();
+                    // alert('Este cliente Ya esta registrado : ' + JSON.stringify(data));
+                    console.log('Depuración: identifyFinger >> Este cliente Ya esta registrado ');
+                    this._store.setIdentifyFinger(data);
+                    this.navCtrl.navigateRoot('resumen');
+                    break;
+
+                     //-9401
+                  case -9401:
+                    this.loading.dismiss();
+                    // alert('Este cliente no esta registrado : ' + JSON.stringify(data));
+                    this.navCtrl.navigateRoot('tipo-identificacion');
+                    break;
+
+                  default:
+                    this.loading.dismiss();
+                    // alert('registrado : ' + JSON.stringify(data));
+                    this.navCtrl.navigateRoot('tipo-identificacion');
+                    break;
+                }
+                this.loading.dismiss();
+                // this.check_Storage();
+
+              }, async error => {
+                this.loading.dismiss();
+                console.log(error);
+                this.message = error.error.message;
+                this.boton = 'Reintentar';
+
+                if (error['status'] === 0 || error['status'] === 500) {
+                  this.message = 'Problemas con la conexion, vuelva a intentarlo mas tarde.';
+                  this.boton = 'Salir';
+                }
+
+                const alert = await this.alertCtrl.create({
+                  backdropDismiss: false,
+                  header: 'Error al intentar verificar datos',
+                  subHeader: this.message,
+                  buttons: [{
+                    text: this.boton,
+                    role: 'reintentar',
+                    cssClass: 'secondary',
+                    handler: () => {
+                      // accion del boton
+                      this.verifyFinger(finger);
+                    }
+                  },
+                ]
+                });
+                await alert.present();
+              });
+
+  }
+
+  verifyFinger_old2(finger: any) {
+    this.loading.present('Verificando datos...');
 
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + this.token,
@@ -369,17 +493,23 @@ export class LoginService {
   getFingerVerify(): any {
     return this.finger;
   }
+ 
 
-  loginUserFinger(jsonEnroll: any, bearerToken: string): Observable<any> {
-    const formData = new FormData();
-    const body = JSON.stringify(jsonEnroll);
-    console.log('JSON que mando para las huellas', body);
+ loginUserFinger(jsonEnroll: any, bearerToken: string): Observable<any> {
+  const formData = new FormData();
+  const body = JSON.stringify(jsonEnroll);
+  console.log('Depuración: >> JSON Request', body);
+  console.log('Depuración: >> Token Request', this.token);
+  
+     //Construimos los headers
+     let headers = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.token})};
 
-    formData.append('json', body);
-    const headers = {headers: new HttpHeaders().set('Authorization', 'Bearer ' + bearerToken)};
-    return this.http.post<any>(this.endpoint + '/bid/rest/v1/auth/login', formData, headers)
-    .pipe(map(this.extractData));
-  }
+  return this.http.post<any>('http://frd.buroidentidad.com:9419/bid/rest/v1/login', body, headers)
+  .pipe(map(this.extractData));
+}
 
   private extractData(res: Response) {
     const body = res;

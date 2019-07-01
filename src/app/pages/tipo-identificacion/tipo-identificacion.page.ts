@@ -53,4 +53,8 @@ export class TipoIdentificacionPage implements OnInit {
     this.login.finalizar();
   }
 
+  back() {
+    this.navCtrl.navigateRoot('verify');
+  }
+
 }

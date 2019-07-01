@@ -23,7 +23,7 @@ export class ConsultaSimilitudPage implements OnInit {
     console.log(this.capturasB);
     this.capturasF = this.saveS.obtenerStorageImagenF();
     console.log('capturasF');
-    console.log(this.capturasF);
+   // console.log(this.capturasF);
   }
 
   onConsultaSimilitudConfirmar() {

@@ -9,16 +9,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content text-center>
+<ion-content text-center  >
   <ion-list padding text-center>
      
       <h1 text-center>Cliente encontrado</h1>
      
     <ion-item-divider></ion-item-divider>
-    <br><br>
-    <h4 text-center><ion-icon name="person"></ion-icon> {{resumen.data.person.first_name}} {{resumen.data.person.last_name}} {{resumen.data.person.middle_name}}</h4>
+    <br><br><br><br><br><br>
+    <h4 text-center><ion-icon name="person"></ion-icon> {{resumen.data.person.firstName}} {{resumen.data.person.middleName}} {{resumen.data.person.lastName}}</h4>
     <br>
-    <h5 text-center>{{resumen.data.person.observations}}</h5>
+    <h5 text-center [style]="success ? 'success': 'nosuccess'" > {{resumen.data.person.observations}} </h5>
 
    <!--  <ion-item>
         <ion-label>Apellido: {{resumen.data.person.last_name}}</ion-label>

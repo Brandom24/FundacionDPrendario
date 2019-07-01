@@ -433,7 +433,7 @@ export class VerifyPage implements OnInit {
       this.login.token).subscribe(
       (resultado: any) => {
         console.log('actualizarDatosActivity');
-        console.log(resultado);
+       // console.log(resultado);
       });
   }
 

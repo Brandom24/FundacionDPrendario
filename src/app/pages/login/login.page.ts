@@ -15,9 +15,11 @@ import { JsonPersonalData } from 'src/app/services/actividades/model/json-person
 import { LoginHuella } from './model/LoginHuella.model';
 import { Cliente } from '../tipo-identificacion/consulta-similitud-confirmacion/model/Cliente.model';
 import { LoadingService } from 'src/app/services/loading.service';
+import { stringify } from 'querystring';
 
 declare var FingersBidEnrollment: any;
 declare var IdentyFingers: any;
+
 
 @Component({
   selector: 'app-login',
@@ -40,6 +42,7 @@ export class LoginPage implements OnInit {
   jsonEnroll: Enroll;
   user = '';
   password = '';
+  
 
   options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
   estampaTiempo: string;
@@ -47,6 +50,9 @@ export class LoginPage implements OnInit {
 
   loginH: LoginHuella;
   cliente: Cliente;
+
+  jsonLoginData: any;
+
   constructor(
     private alertCtrl: AlertController,
     private navCtrl: NavController,
@@ -67,10 +73,35 @@ export class LoginPage implements OnInit {
   }
 
   verifyUser() {
-    this.login.verifyUser(this.user, this.password);
+    //this.login.verifyUser(this.user, this.password);
+    this.saveS.setUser(this.user);
+    this.login.verifyUser(this.user, this.password).subscribe(
+      (result) => {
+        this.saveS.setResultLogin(result);
+        this.loading.dismiss();
+        console.log('Depuración: Response login:');
+        console.log(result);
+
+        if (result['code'] === -9999) {
+          console.log('Acceso: OK');
+            this.goVerify();
+  
+        } else {
+          
+          alert('La combinación de usuario y contraseña no es correcta');
+  
+        }
+      }, (error) => {
+        this.loading.dismiss();
+        console.log('Error: Login user');
+        console.log(error);
+       
+      }
+    );
   }
 
   async startFingersEnrollment() {
+    this.saveS.setUser(this.user);
     this.desahilitarBotonHuellas();
     this.desahilitarBotonRostro();
     this.activarSpinnerHuellas();
@@ -160,35 +191,46 @@ export class LoginPage implements OnInit {
 
   verificarCliente(jsonFingerPrintsString: any) {
     this.loading.present('Verificando datos...');
-    // const finger = JSON.parse(jsonFingerPrintsString);
-    this.loginH = new LoginHuella();
-    this.loginH.operationId = this.saveS.getOperationID();
-    this.loginH.personID = this.saveS.getPersonId();
-    this.loginH.user = this.user;
-    this.loginH.code = this.saveS.getSystemCode();
-    this.loginH.uid = '';
-    this.loginH.fingers = true;
-    this.loginH.finger = jsonFingerPrintsString;
-    // finger['leftindex'];
-    // consumir servicio para guardar huellas
-    // this.jsonEnroll, this.login.token
+  
+    
+   this.jsonLoginData = {'user': this.user,
+    'fingerPrint':jsonFingerPrintsString,'uid':''};
+
+   this.loginH = new LoginHuella();
+   this.loginH.data = this.jsonLoginData;
 
     this.login.loginUserFinger(this.loginH, this.login.token).subscribe(
       (result) => {
         this.saveS.setResultLogin(result);
         this.loading.dismiss();
-        console.log('loginUserFinger');
+        console.log('Depuración: Response login:');
         console.log(result);
-        // this.presentAlertConfirm(JSON.stringify(result));
+        //this.presentAlertConfirm(JSON.stringify(result));
         this.validateCapture = true;
         this.idFinger = true;
         this.idFinger2 = false;
         this.habilitarButonHuellas();
         this.habilitarButonRostro();
         this.DesactivarSipnnerHuellas();
+
+        //let JsonResponse =JSON.parse(result);
+
+        console.log(result);
+        if (result['code'] === -9999) {
+          console.log('Acceso: OK');
+            this.goVerify();
+  
+        } else {
+          
+          alert('Usuario ó huella no validas');
+  
+        }
+
         // resultOK: false
+        /*
         switch (result['resultOK']) {
           case true:
+            console.log('Acceso: OK');
             this.goVerify();
             break;
 
@@ -198,9 +240,11 @@ export class LoginPage implements OnInit {
           default:
             break;
         }
+
+        */
       }, (error) => {
         this.loading.dismiss();
-        console.log('Error guardarFingerEnroll');
+        console.log('Error: Login user');
         console.log(error);
         this.idFinger2 = true;
         this.idFinger = false;

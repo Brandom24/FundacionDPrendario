@@ -11,6 +11,11 @@ import { Enroll } from './modal/Enroll.model';
 import { EnrollService } from 'src/app/services/enroll.service';
 import { ActivatedRoute } from '@angular/router';
 import { JsonPersonalData } from 'src/app/services/actividades/model/json-personal-data.model';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { LoadingService } from 'src/app/services/loading.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 
 declare var IdentyFingers: any;
 declare var ZoomAuthenticationHybrid: any;
@@ -37,11 +42,15 @@ export class BiometriaDactilarPage implements OnInit {
   secuenceId: number;
   validateCapture: boolean;
   jsonEnroll: Enroll;
+  message: string;
+  abortProces: boolean;
 
   client: JsonPersonalData;
   origin: string;
+  boton: string;
 
   constructor(
+    private http: HttpClient,
     private alertCtrl: AlertController,
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
@@ -51,7 +60,9 @@ export class BiometriaDactilarPage implements OnInit {
     private activityService: ActivitiesService,
     private saveS: GuardarStorageService,
     private enroll: EnrollService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loading: LoadingService,
+    
   ) {
     this.route.queryParams.subscribe(params => {
       if (params) {
@@ -111,12 +122,24 @@ export class BiometriaDactilarPage implements OnInit {
     await alert.present();
   }
 
-  async selectBio() {
+  async emptyAlert( title: string, sub: string, message: string, buttons: string[]) {
     const alert = await this.alertCtrl.create({
+      backdropDismiss: false,
+      header: title,
+      subHeader: sub,
+      message: message,
+      buttons: buttons
+    });
+    await alert.present();
+  }
+
+  async selectBio() {
+    this.startFingersEnrollment2F();
+    /*const alert = await this.alertCtrl.create({
       header: 'Modo de captura dactilar.',
       mode: 'ios',
       message: '<img src="../../assets/img/huella_2.png" class=""><br/>'
-      + 'Selecione el modo de captura para huella dactilar.',
+      + 'Seleccione el modo de captura para huella dactilar.',
       buttons: [
         {
           text: '2F',
@@ -134,7 +157,7 @@ export class BiometriaDactilarPage implements OnInit {
         }
       ]
     });
-    await alert.present();
+    await alert.present();*/
   }
 
   async startFingersEnrollment2F() {
@@ -201,7 +224,7 @@ export class BiometriaDactilarPage implements OnInit {
                   console.log('Tu huellas son : ');
                   console.log(jsonFingerPrintsString);
                   const { role, data } = await loading.onDidDismiss();
-                  console.log('Se inicializo correctamente ó termino');
+                  console.log('Se inicializo ó termino correctamente');
                   // llamar metodo para guardar huellas en el back
                   this.guardarHuellas(jsonFingerPrintsString);
                   // this.actualizarActivity('FINALIZADO', this.secuenceId);
@@ -317,8 +340,12 @@ export class BiometriaDactilarPage implements OnInit {
 
   guardarHuellas(jsonFingerPrintsString: any) {
     console.log('guardarHuellas jsonFingerPrintsString');
-    console.log(jsonFingerPrintsString);
+   // console.log(jsonFingerPrintsString);
+
+    this.abortProces=false;
+
     const finger = JSON.parse(jsonFingerPrintsString);
+
     if (jsonFingerPrintsString) {
       this.jsonEnroll = new Enroll();
     this.jsonEnroll.enrollmentCode = this.saveS.getSystemCode();
@@ -332,8 +359,43 @@ export class BiometriaDactilarPage implements OnInit {
     this.jsonEnroll.rightring = finger['rightring'];
     this.jsonEnroll.rightlittle = finger['rightlittle'];
     console.log('this.jsonEnroll');
-    console.log(this.jsonEnroll);
-    // consumir servicio para guardar huellas
+    console.log('Log:',this.jsonEnroll);
+
+    //Verificar huellas de usuario
+
+    
+    let jsonLoginData = {
+       'user': this.saveS.getUser(),
+       'fingerPrint':finger['leftindex'],
+       'uid':''
+      };
+     let jsonLoginData2 = {
+        'data': jsonLoginData
+     };
+
+
+    this.loginUserFinger(jsonLoginData2);
+      if(this.abortProces)
+      {
+        return;
+      }
+
+
+    // Fin de verificar usuario
+     
+    
+
+
+    //Verificar huellas de cliente
+
+    this.indentiy(2);
+    if(this.abortProces)
+    {
+      return;
+    }
+  
+
+    //Enrolar cliente
     this.enroll.guardarFingerEnroll(this.jsonEnroll, this.login.token).subscribe(
       (result) => {
         console.log('guardarFingerEnroll');
@@ -363,6 +425,136 @@ export class BiometriaDactilarPage implements OnInit {
     }
 
   }
+
+  //verifyAndIndentiy(user: string, password: string): Observable<any> {
+    indentiy(userType :number) {
+    console.log('Log: Verificando usuario...');
+    this.loading.present('Verificando datos...');
+
+    let headers = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + this.login.token,
+          'Accept': '*/*'
+    })};
+  
+    const jsonRequestData = {
+          'userType': userType,
+          'fingerPrint': this.jsonEnroll.leftindex
+        };
+    
+    const jsonRequestMetadata = {
+            'operationId':this.saveS.getOperationID(),
+            'data': jsonRequestData};
+  
+    const body = JSON.stringify(jsonRequestMetadata);
+  
+    this.http.post<any>('http://frd.buroidentidad.com:9420/bid/fingerIdentification/identify', body, headers)
+                .subscribe( async data => {
+                  console.log('Log: identifyFinger >> result data');
+                  console.log(JSON.stringify(data));
+                  
+                  switch (data['code']) {
+                    case -9601:
+                      this.loading.dismiss();
+                      console.log('Log: Huellas no encontradas');
+                      break;
+  
+                    case -9999:
+                      this.loading.dismiss();
+                      this.abortProces=true;
+                      console.log('Log: verify >> Huella encontrada');
+                      this.emptyAlert('Aviso','Operación inválida ','',['OK']);
+
+                      this.navCtrl.navigateRoot('/login');
+                    
+                      break;
+
+                    case -9401:
+                      this.loading.dismiss();
+                      console.log('Log: Este cliente no esta registrado ');
+                      break;
+                    
+                  }
+                  this.loading.dismiss();
+                  // this.check_Storage();
+  
+                }, async error => {
+                  this.loading.dismiss();
+                  console.log(error);
+
+                  this.message = error.error.message;
+                  this.boton = 'Reintentar';
+  
+                  if (error['status'] === 0 || error['status'] === 500) {
+                    this.message = 'Problemas con la conexion, vuelva a intentarlo mas tarde.';
+                    this.boton = 'Salir';
+                  }
+  
+                  const alert = await this.alertCtrl.create({
+                    backdropDismiss: false,
+                    header: 'Error al verificar datos',
+                    subHeader: this.message,
+                    buttons: [{
+                      text: this.boton,
+                      role: 'reintentar',
+                      cssClass: 'secondary',
+                      handler: () => {
+                        // accion del boton
+                        //this.verifyFinger(finger);
+                      }
+                    },
+                  ]
+                  });
+                  await alert.present();
+                });
+
+  }
+
+/* verificar usuario */
+
+loginUserFinger(jsonEnroll: any) {
+  
+  const body = JSON.stringify(jsonEnroll);
+  console.log('Log: loginUserFinger >> JSON Request', body);
+  console.log('Log: loginUserFinger >> Token Request', this.login.token);
+  
+    
+     let headers = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.login.token})};
+
+  this.http.post<any>('http://frd.buroidentidad.com:9419/bid/rest/v1/login', body, headers).subscribe( (data) => {
+
+    JSON.stringify(data);
+    console.log('Log: data >> ', data);
+
+    if (data['code'] === -9999) {
+
+      
+
+        console.log('Operación no permitida, agente detectado');   
+        this.abortProces=true;
+        
+       this.emptyAlert('Aviso','Operación no permitida, agente detectado',data['data'].name +' '+data['data'].middleName+' '+ data['data'].lastname,['OK']);
+        this.navCtrl.navigateRoot('/login');
+    }
+
+  });
+}
+
+  private extractData(res: Response) {
+    const body = res;
+    console.log('Respuesta de verificación de usuario');
+    console.log(JSON.stringify(res));
+    return body || { };
+  }
+
+  
+
+/* Fin de verificar usuario */
+
 
   sigPagCancel() {
    // this.navCtrl.push(DashboardPage);

@@ -78,7 +78,7 @@ export class PhotosService {
       'Authorization': 'Bearer ' + this.login.token
     });
 
-    console.log(JSON.stringify(formData));
+    //JSON.stringify(formData));
 
     return this.http.post(URL_SERVICIOS + '/documents/upload', formData, {headers})
               .subscribe( data => {

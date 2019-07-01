@@ -1,8 +1,8 @@
 <ion-header>
     <ion-toolbar color="primary">
         <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
+          <ion-back-button></ion-back-button>
+        </ion-buttons>
         <div slot="end">
             <img src="../../../assets/img/mini-logoTrans_letra_Blanca.png" class="style_logo_header">
         </div>
@@ -16,7 +16,7 @@
               <ion-col justify-content-center align-items-center>
                 <div class="" text-center>Captura de biometría dactilar</div>
               </ion-col>
-              <ion-icon class="style_icon_logout" name="power" (click)="logout()"></ion-icon> 
+              <ion-icon class="style_icon_logout" name="log-out" (click)="logout()"></ion-icon> 
             <ion-item-divider></ion-item-divider>
           </ion-row>
       </div>    
@@ -39,10 +39,10 @@
     </ion-col>
     <ion-col size="8" align-self-center>
         <span>Captura tus huellas dactilares</span>
-        <ion-button class="ion-margin-top" expand="block" fill="outline" (click)="selectBio()" [disabled]="isValidoHuellas">
+        <ion-button class="ion-margin-top" class="color_button" expand="block" (click)="selectBio()" [disabled]="isValidoHuellas">
           <ion-spinner *ngIf="isValidoHuellasSpinner" name="bubbles"></ion-spinner>  
           <ion-ripple-effect></ion-ripple-effect>  
-          Huellas
+            HUELLAS
           </ion-button>
     </ion-col>
   </ion-row>
@@ -52,7 +52,7 @@
           <!-- [disabled]="!idFinger || !idFinger2" --><!--  -->
           <ion-button color="primary" class="color_button" expand="block" (click)="onConsultaSimilitud()" [disabled]="!idFinger">
               <ion-ripple-effect></ion-ripple-effect>
-              CONTINUAR
+              COMPLETADO
             </ion-button>
       </ion-toolbar>
     </ion-footer> 

@@ -94,10 +94,12 @@ export class IdentificacionOficialPage implements OnInit {
     this.isValidoSpinnerFront = true;
     const options: CameraOptions = {
      quality: 100,
+     targetHeight: 800,
+     targetWidth: 1200,
      destinationType: this.camera.DestinationType.DATA_URL,
      encodingType: this.camera.EncodingType.JPEG,
      mediaType: this.camera.MediaType.PICTURE,
-     correctOrientation: true
+     correctOrientation: true,
    };
 
    this.camera.getPicture(options).then((imageData) => {
@@ -124,6 +126,8 @@ export class IdentificacionOficialPage implements OnInit {
     this.isValidoSpinnerFront = true;
     const options: CameraOptions = {
      quality: 100,
+     targetHeight: 800,
+     targetWidth: 1200,
      destinationType: this.camera.DestinationType.DATA_URL,
      encodingType: this.camera.EncodingType.JPEG,
      mediaType: this.camera.MediaType.PICTURE,

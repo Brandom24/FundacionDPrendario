@@ -37,6 +37,7 @@ export class GuardarStorageService {
   systemCode: any;
   identifyFinger: any;
   resultLogin: any;
+  user: string;
 
 
     public getResBuro(): string {
@@ -46,6 +47,14 @@ export class GuardarStorageService {
     public setResBuro(resBuro: string): void {
         this.resBuro = resBuro;
     }
+
+    public getUser(): string {
+      return this.user;
+  }
+
+  public setUser(user: string): void {
+      this.user = user;
+  }
 
 
     public getResumenDoctos(): ResumenDoctos[] {
@@ -227,7 +236,7 @@ public setJsonDatosActivity(jsonDatosActivity: JsonDatosActivity): void {
   }
 
   guardarStorageImagenB(data: any) {
-  //console.log('Data del guardarStorage B' + JSON.stringify(data) + ' Tamaño' + data.length);
+  console.log('Data del guardarStorage B' + JSON.stringify(data) + ' Tamaño' + data.length);
   //this.storage.set('capturasB', JSON.stringify(data));
   this.capturasB = data;
   }
